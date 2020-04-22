@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "5680253086",
+    "firebase_url": "https://ehprotocol.firebaseio.com",
+    "project_id": "ehprotocol",
+    "storage_bucket": "ehprotocol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5680253086:android:403682aa9df3f4972a938f",
+        "android_client_info": {
+          "package_name": "com.example.ehprotocol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5680253086-3a9ic53smpqm55ahdsf4ikjbvdhrje4q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ehprotocol",
+            "certificate_hash": "1c9d43e0b00f7b014a47d9bb04dfd5bfd647e8b5"
+          }
+        },
+        {
+          "client_id": "5680253086-nkbgtu9rar7jdtr2p12bc3tsq762eg4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBilfq_M_Z231rL7jpOjqSB092Q2PTrqg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5680253086-nkbgtu9rar7jdtr2p12bc3tsq762eg4q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
