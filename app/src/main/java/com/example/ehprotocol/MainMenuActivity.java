@@ -19,13 +19,13 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        checkInButton = (Button) findViewById(R.id.checkInButton);
-        checkOutButton = (Button) findViewById(R.id.checkOutButton);
-        testButton = (Button) findViewById(R.id.testButton);
-        aboutButton = (Button) findViewById(R.id.aboutButton);
-        logoutButton = (Button) findViewById(R.id.logoutButton);
+        checkInButton = findViewById(R.id.checkInButton);
+        checkOutButton = findViewById(R.id.checkOutButton);
+        testButton = findViewById(R.id.testButton);
+        aboutButton = findViewById(R.id.aboutButton);
+        logoutButton = findViewById(R.id.logoutButton);
 
-        welcomeText = (TextView) findViewById(R.id.welcomeText);
+        welcomeText = findViewById(R.id.welcomeText);
 
         Bundle extras = getIntent().getExtras();
 

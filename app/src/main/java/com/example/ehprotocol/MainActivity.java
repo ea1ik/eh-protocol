@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton enterButton = (ImageButton) findViewById(R.id.enterButton);
+        ImageButton enterButton = findViewById(R.id.enterButton);
 
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 

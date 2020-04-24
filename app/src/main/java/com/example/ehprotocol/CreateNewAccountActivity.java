@@ -6,29 +6,51 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.firebase.client.Firebase;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class CreateNewAccountActivity extends AppCompatActivity {
 
     private TextInputLayout emailInput, usernameInput, passwordInput, confirmPasswordInput;
     private String email, username, password, confirmPassword;
+    private boolean remember;
 
     private Button createAccount;
+
+    private Firebase root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_account);
 
-        emailInput = (TextInputLayout) findViewById(R.id.emailField);
-        usernameInput = (TextInputLayout) findViewById(R.id.usernameField);
-        passwordInput = (TextInputLayout) findViewById(R.id.passwordField);
-        confirmPasswordInput = (TextInputLayout) findViewById(R.id.passwordConfField);
+        root = new Firebase("https://ehprotocol.firebaseio.com/Users/");
 
-        createAccount = (Button) findViewById(R.id.createAccountButton);
+        remember = true;
+
+        emailInput = findViewById(R.id.emailField);
+        usernameInput = findViewById(R.id.usernameField);
+        passwordInput = findViewById(R.id.passwordField);
+        confirmPasswordInput = findViewById(R.id.passwordConfField);
+
+        createAccount = findViewById(R.id.createAccountButton);
 
         createAccount.setOnClickListener(e -> {
             if(validateEmail() & validatePassword() & validateUsername() & confirmPassword()){
+
+                System.out.println(username);
+
+                Firebase usernameChild = root.child("Username");
+                usernameChild.setValue(username);
+                Firebase emailChild = root.child("Email");
+                emailChild.setValue(email);
+                Firebase passwordChild = root.child("Password");
+                passwordChild.setValue(password);
+                Firebase rememberMe = root.child("RememberMe");
+                rememberMe.setValue(remember);
+                Firebase deviceID = root.child("Device IDs");
+                Firebase IDs = deviceID.child("ID");
+                IDs.setValue("wssd");
 
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);

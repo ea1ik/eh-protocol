@@ -2,16 +2,18 @@ package com.example.ehprotocol;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView usernameText, passwordText, newUser, forgotPass, errorText;
+    private TextInputLayout usernameText, passwordText;
+    private TextView newUser, forgotPass, errorText;
     private Button loginButton;
     private CheckBox rememberMeCB;
 
@@ -24,25 +26,26 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameText = (TextView) findViewById(R.id.userPlainText);
-        passwordText = (TextView) findViewById(R.id.passwordPlainText);
-        newUser = (TextView) findViewById(R.id.newUserTextView);
-        forgotPass = (TextView) findViewById(R.id.forgotPasswordTextView);
-        errorText = (TextView) findViewById(R.id.errorTextView);
+        usernameText = (TextInputLayout) findViewById(R.id.userTextInput);
+        passwordText = (TextInputLayout) findViewById(R.id.passwordTextInput);
 
-        loginButton = (Button) findViewById(R.id.loginButton);
+        newUser = findViewById(R.id.newUserTextView);
+        forgotPass = findViewById(R.id.forgotPasswordTextView);
+        errorText = findViewById(R.id.errorTextView);
 
-        rememberMeCB = (CheckBox) findViewById(R.id.rememberMeCB);
+        loginButton = findViewById(R.id.loginButton);
+
+        rememberMeCB = findViewById(R.id.rememberMeCB);
 
         loginButton.setOnClickListener(e -> {
-            if (usernameText.getText().toString().equals(username) && passwordText.getText().toString().equals(password)) {
-                if (rememberMeCB.isChecked())
-                    rememberMe = true;
-                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-            } else {
-                errorText.setVisibility(View.VISIBLE);
+            if(validateUsername() & validatePassword()) {
+                if (usernameText.getEditText().getText().toString().equals(username) && passwordText.getEditText().getText().toString().equals(password)) {
+                    if (rememberMeCB.isChecked())
+                        rememberMe = true;
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -55,5 +58,23 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
             startActivity(intent);
         });
+    }
+
+    private boolean validateUsername() {
+        if(usernameText.getEditText().getText().toString().isEmpty()){
+            usernameText.setError("Field is empty");
+            return false;
+        }
+        usernameText.setError(null);
+        return true;
+    }
+
+    private boolean validatePassword() {
+        if(passwordText.getEditText().getText().toString().isEmpty()){
+            passwordText.setError("Field is empty");
+            return false;
+        }
+        passwordText.setError(null);
+        return true;
     }
 }
