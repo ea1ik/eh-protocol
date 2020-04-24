@@ -29,7 +29,8 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
         createAccount.setOnClickListener(e -> {
             if(validateEmail() & validatePassword() & validateUsername() & confirmPassword()){
-                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });

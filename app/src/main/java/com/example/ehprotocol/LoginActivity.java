@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (rememberMeCB.isChecked())
                     rememberMe = true;
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             } else {
                 errorText.setVisibility(View.VISIBLE);
