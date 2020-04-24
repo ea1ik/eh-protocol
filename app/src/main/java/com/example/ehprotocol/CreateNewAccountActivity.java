@@ -24,8 +24,6 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_account);
 
-        root = new Firebase("https://ehprotocol.firebaseio.com/Users/");
-
         remember = true;
 
         emailInput = findViewById(R.id.emailField);
@@ -36,21 +34,15 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         createAccount = findViewById(R.id.createAccountButton);
 
         createAccount.setOnClickListener(e -> {
-            if(validateEmail() & validatePassword() & validateUsername() & confirmPassword()){
+            if (validateEmail() & validatePassword() & validateUsername() & confirmPassword()) {
+                root = new Firebase("https://ehprotocol.firebaseio.com/" + username + "/");
 
-                System.out.println(username);
-
-                Firebase usernameChild = root.child("Username");
-                usernameChild.setValue(username);
                 Firebase emailChild = root.child("Email");
                 emailChild.setValue(email);
                 Firebase passwordChild = root.child("Password");
                 passwordChild.setValue(password);
                 Firebase rememberMe = root.child("RememberMe");
-                rememberMe.setValue(remember);
                 Firebase deviceID = root.child("Device IDs");
-                Firebase IDs = deviceID.child("ID");
-                IDs.setValue("wssd");
 
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
@@ -60,9 +52,9 @@ public class CreateNewAccountActivity extends AppCompatActivity {
     }
 
 
-    private boolean validateEmail(){
+    private boolean validateEmail() {
         email = emailInput.getEditText().getText().toString().trim();
-        if(email.isEmpty()) {
+        if (email.isEmpty()) {
             emailInput.setError("Field is empty");
             return false;
         }
@@ -70,9 +62,9 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validatePassword(){
+    private boolean validatePassword() {
         password = passwordInput.getEditText().getText().toString();
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             passwordInput.setError("Field is empty");
             return false;
         }
@@ -82,11 +74,11 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
     private boolean confirmPassword() {
         confirmPassword = confirmPasswordInput.getEditText().getText().toString();
-        if(confirmPassword.isEmpty()){
+        if (confirmPassword.isEmpty()) {
             confirmPasswordInput.setError("Field is empty");
             return false;
         }
-        if(!confirmPassword.equals(password)){
+        if (!confirmPassword.equals(password)) {
             confirmPasswordInput.setError("Passwords do not match");
             return false;
         }
@@ -94,13 +86,13 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validateUsername(){
+    private boolean validateUsername() {
         username = usernameInput.getEditText().getText().toString().trim();
-        if(username.isEmpty()) {
+        if (username.isEmpty()) {
             usernameInput.setError("Field is empty");
             return false;
         }
-        if(username.length() > 15) {
+        if (username.length() > 15) {
             usernameInput.setError("Username too long");
             return false;
         }
