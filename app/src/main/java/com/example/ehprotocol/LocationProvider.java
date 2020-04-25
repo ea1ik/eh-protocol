@@ -20,7 +20,7 @@ public class LocationProvider extends JobService {
             @Override
             public void run() {
                 while (count < 30) {
-                    // get location
+                    // get loc
                     // compare it with other locations
                     // update local database
                     /*
