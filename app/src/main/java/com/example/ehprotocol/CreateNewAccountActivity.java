@@ -35,17 +35,17 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         createAccount = findViewById(R.id.createAccountButton);
 
         createAccount.setOnClickListener(e -> {
-            if ( validatePassword() & validateUsername() & confirmPassword()) {
+            if (validatePassword() & validateUsername() & confirmPassword()) {
                 FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference users = mDatabase.getReference("/");
                 DatabaseReference newChildRef = users.push();
                 root = new Firebase("https://ehprotocol.firebaseio.com/" + newChildRef.getKey() + "/");
-                Firebase usernameChild=root.child("Username");
+                Firebase usernameChild = root.child("Username");
                 usernameChild.setValue(username);
                 Firebase passwordChild = root.child("Password");
                 passwordChild.setValue(password);
                 Firebase deviceID = root.child("Device IDs");
-                Firebase contacts=root.child("Contacts");
+                Firebase contacts = root.child("Contacts");
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }
