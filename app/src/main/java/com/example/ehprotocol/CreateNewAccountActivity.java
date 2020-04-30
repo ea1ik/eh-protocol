@@ -8,16 +8,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.client.Firebase;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateNewAccountActivity extends AppCompatActivity {
 
-    private TextInputLayout emailInput, usernameInput, passwordInput, confirmPasswordInput;
-    private String email, username, password, confirmPassword;
+    private TextInputLayout usernameInput, passwordInput, confirmPasswordInput;
+    private String username, password, confirmPassword;
     private boolean remember;
 
     private Button createAccount;
 
-    private Firebase root;
+    private Firebase root, users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,6 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
         remember = true;
 
-        emailInput = findViewById(R.id.emailField);
         usernameInput = findViewById(R.id.usernameField);
         passwordInput = findViewById(R.id.passwordField);
         confirmPasswordInput = findViewById(R.id.passwordConfField);
@@ -34,32 +35,22 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         createAccount = findViewById(R.id.createAccountButton);
 
         createAccount.setOnClickListener(e -> {
-            if (validateEmail() & validatePassword() & validateUsername() & confirmPassword()) {
-                root = new Firebase("https://ehprotocol.firebaseio.com/" + username + "/");
-
-                Firebase emailChild = root.child("Email");
-                emailChild.setValue(email);
+            if ( validatePassword() & validateUsername() & confirmPassword()) {
+                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference users = mDatabase.getReference("/");
+                DatabaseReference newChildRef = users.push();
+                root = new Firebase("https://ehprotocol.firebaseio.com/" + newChildRef.getKey() + "/");
+                Firebase usernameChild=root.child("Username");
+                usernameChild.setValue(username);
                 Firebase passwordChild = root.child("Password");
                 passwordChild.setValue(password);
-                Firebase rememberMe = root.child("RememberMe");
                 Firebase deviceID = root.child("Device IDs");
-
+                Firebase contacts=root.child("Contacts");
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });
 
-    }
-
-
-    private boolean validateEmail() {
-        email = emailInput.getEditText().getText().toString().trim();
-        if (email.isEmpty()) {
-            emailInput.setError("Field is empty");
-            return false;
-        }
-        emailInput.setError(null);
-        return true;
     }
 
     private boolean validatePassword() {
