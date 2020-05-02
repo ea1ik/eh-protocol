@@ -115,9 +115,6 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
     private boolean validateUsername() {
         username = usernameInput.getEditText().getText().toString().trim();
-        //if (alreadyExists(username)){
-        //    usernameInput.setError("Username already exists.");
-        //}
         if (username.isEmpty()) {
             usernameInput.setError("Field is empty");
             return false;
