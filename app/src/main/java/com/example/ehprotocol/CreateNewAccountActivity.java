@@ -37,9 +37,9 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         createAccount.setOnClickListener(e -> {
             if (validatePassword() & validateUsername() & confirmPassword()) {
                 FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference users = mDatabase.getReference("/");
+                DatabaseReference users = mDatabase.getReference("/users/");
                 DatabaseReference newChildRef = users.push();
-                root = new Firebase("https://ehprotocol.firebaseio.com/" + newChildRef.getKey() + "/");
+                root = new Firebase("https://ehprotocol.firebaseio.com/users/" + newChildRef.getKey() + "/");
                 Firebase usernameChild = root.child("Username");
                 usernameChild.setValue(username);
                 Firebase passwordChild = root.child("Password");
