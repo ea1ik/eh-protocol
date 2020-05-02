@@ -2,10 +2,12 @@ package com.example.ehprotocol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.client.Firebase;
@@ -23,12 +25,14 @@ public class LoginActivity extends AppCompatActivity {
     private TextView newUser, forgotPass, errorText;
     private Button loginButton;
     private CheckBox rememberMeCB;
-
+    DatabaseReference users;
 
     private static boolean rememberMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        users = database.getReference("users");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -43,38 +47,14 @@ public class LoginActivity extends AppCompatActivity {
 
         rememberMeCB = findViewById(R.id.rememberMeCB);
 
-        loginButton.setOnClickListener(e -> {
-            if(validateUsername() & validatePassword()) {
-                Firebase userRef= new Firebase("https://ehprotocol.firebaseio.com/users/");
-                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference userNameRef = rootRef.child("users");
-                Query queries=userNameRef.orderByChild("Username").equalTo(usernameText.getEditText().getText().toString().trim());
-                boolean[] flag = new boolean[1];
-                ValueEventListener eventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.exists()) {
-                            flag[0] =false;
-                            usernameText.setError("Invalid username.");
-                        }
-                        else
-                            flag[0]=true;
-                    }
+        loginButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                signIn(usernameText.getEditText().getText().toString().trim(),passwordText.getEditText().getText().toString());
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
-                };
-                queries.addListenerForSingleValueEvent(eventListener);
-                if (flag[0]){
-                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                    // intent.putExtra("username", username);
-                    startActivity(intent);
-                }
-
-
-                }
             }
-        );
+
+        });
 
         newUser.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), CreateNewAccountActivity.class);
@@ -84,6 +64,39 @@ public class LoginActivity extends AppCompatActivity {
         forgotPass.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
             startActivity(intent);
+        });
+    }
+
+    private void signIn(final String username, final String password) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userNameRef = rootRef.child("users");
+        Query queries=userNameRef.orderByChild("Username").equalTo(username);
+        queries.addListenerForSingleValueEvent(new ValueEventListener(){
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    User login = dataSnapshot.child(username).getValue(User.class);
+
+                    for (DataSnapshot user : dataSnapshot.getChildren()) {
+                        // do something with the individual "issues"
+                        User usera = user.getValue(User.class);
+                        if (usera.password.equals(passwordText.getEditText().getText().toString())) {
+                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                            startActivity(intent);
+                        } else {
+                            passwordText.setError("Password is incorrect.");
+                        }
+                    }
+                } else {
+                    usernameText.setError("Username is incorrect.");
+                }
+                                       }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 
