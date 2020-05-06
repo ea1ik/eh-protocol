@@ -16,6 +16,7 @@ import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 // Stitch Authentication Packages
 import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
@@ -31,7 +32,7 @@ import org.bson.Document;
 import java.util.Arrays;
 
 public class CreateNewAccountActivity extends AppCompatActivity {
-
+    final String Debugg="stuff";
     private TextInputLayout usernameInput, passwordInput, confirmPasswordInput;
     private String username, password, confirmPassword;
     private boolean remember;
@@ -70,61 +71,43 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
 
         createAccount.setOnClickListener(e -> {
-            if (validatePassword() & validateUsername() & confirmPassword()  /*&alreadyExists()*/) {
+            if (validatePassword() & validateUsername() & confirmPassword()) {
                 username = usernameInput.getEditText().getText().toString().trim();
                 password = passwordInput.getEditText().getText().toString();
 
-
-
-                Document newUser = new Document()
-                        .append("username", username)
-                        .append("password", password)
-                        .append("contacts", Arrays.asList()
-                        );
-             //   usersCollection.insertOne(newUser);
-                final Task<RemoteInsertOneResult> insertTask = usersCollection.insertOne(newUser);
-                insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+                Document filterDoc = new Document()
+                        .append("username", username);
+                usersCollection.count(filterDoc).addOnCompleteListener(new OnCompleteListener <Long> () {
                     @Override
-                    public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
+                    public void onComplete(@NonNull Task <Long> task) {
                         if (task.isSuccessful()) {
-                            Log.d("app", String.format("successfully inserted item with id %s",
-                                    task.getResult().getInsertedId()));
-                        } else {
-                            Log.e("app", "failed to insert document with: ", task.getException());
+                            Long numDocs = task.getResult();
+                            Log.d(Debugg, numDocs.toString());
+                            if (numDocs.longValue()==0l){
+                                Log.d(Debugg, "inside");
+                                Document newUser = new Document()
+                                        .append("username", username)
+                                        .append("password", password)
+                                        .append("contacts", Arrays.asList()
+                                        );
+                                usersCollection.insertOne(newUser);
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
+                                }
+                            else{
+                                Log.d(Debugg, "inside else");
+                                usernameInput.setError("Username already exists.");
+                            }
                         }
                     }
                 });
 
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
+
+
             }
         });
 
     }
-
-/*    private boolean alreadyExists(){
-        Firebase userRef= new Firebase("https://ehprotocol.firebaseio.com/users/");
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userNameRef = rootRef.child("users");
-        Query queries=userNameRef.orderByChild("Username").equalTo(username);
-        boolean[] flag = new boolean[1];
-        ValueEventListener eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    flag[0] =false;
-                    usernameInput.setError("Username already exists.");
-                }
-                else
-                    flag[0]=true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        queries.addListenerForSingleValueEvent(eventListener);
-        return flag[0];
-    }*/
 
     private boolean validatePassword() {
         username = usernameInput.getEditText().getText().toString().trim();
