@@ -68,30 +68,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(final String username, final String password) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userNameRef = rootRef.child("users");
-        Query queries=userNameRef.orderByChild("Username").equalTo(username);
-        queries.addListenerForSingleValueEvent(new ValueEventListener(){
+        users.addListenerForSingleValueEvent(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.child(username).exists()){
                     User login = dataSnapshot.child(username).getValue(User.class);
-
-                    for (DataSnapshot user : dataSnapshot.getChildren()) {
-                        // do something with the individual "issues"
-                        User usera = user.getValue(User.class);
-                        if (usera.password.equals(passwordText.getEditText().getText().toString())) {
-                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                            startActivity(intent);
-                        } else {
-                            passwordText.setError("Password is incorrect.");
-                        }
+                    if (login.password.equals(password)){
+                        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                        startActivity(intent);
                     }
+                     else {
+                            passwordText.setError("Invalid username or password.");
+                        }
+
                 } else {
-                    usernameText.setError("Username is incorrect.");
+                    usernameText.setError("Invalid username or password.");
                 }
-                                       }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
