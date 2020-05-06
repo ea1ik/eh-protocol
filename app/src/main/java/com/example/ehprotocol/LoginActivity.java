@@ -10,14 +10,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.firebase.client.Firebase;
+
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+// Base Stitch Packages
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+// Stitch Authentication Packages
+import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+// MongoDB Service Packages
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+// Utility Packages
+import com.mongodb.stitch.core.internal.common.BsonUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,14 +32,19 @@ public class LoginActivity extends AppCompatActivity {
     private TextView newUser, forgotPass, errorText;
     private Button loginButton;
     private CheckBox rememberMeCB;
-    DatabaseReference users;
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection usersCollection;
 
     private static boolean rememberMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        users = database.getReference("users");
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -68,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(final String username, final String password) {
-        users.addListenerForSingleValueEvent(new ValueEventListener(){
+     /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -91,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     private boolean validateUsername() {

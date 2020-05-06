@@ -6,16 +6,29 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+// Base Stitch Packages
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+// Stitch Authentication Packages
+import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+// MongoDB Service Packages
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+// Utility Packages
+import com.mongodb.stitch.core.internal.common.BsonUtils;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
+
+import org.bson.Document;
+
+import java.util.Arrays;
 
 public class CreateNewAccountActivity extends AppCompatActivity {
 
@@ -25,12 +38,27 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
     private Button createAccount;
 
-    private Firebase root, users;
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection usersCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Stitch.getDefaultAppClient().getAuth().loginWithCredential(new AnonymousCredential()).addOnCompleteListener(new OnCompleteListener<StitchUser>() {
+                                                                                                                        @Override
+                                                                                                                        public void onComplete(@NonNull final Task<StitchUser> task) {
+                                                                                                                            if (task.isSuccessful()) {
+                                                                                                                                Log.d("stitch", "logged in anonymously");
+                                                                                                                            } else {
+                                                                                                                                Log.e("stitch", "failed to log in anonymously", task.getException());
+                                                                                                                            }
+                                                                                                                        }});
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_account);
+
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
 
         remember = true;
 
@@ -42,17 +70,31 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
 
         createAccount.setOnClickListener(e -> {
-            if (validatePassword() & validateUsername() & confirmPassword() & alreadyExists()) {
-                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference users = mDatabase.getReference("/users/");
-                DatabaseReference newChildRef = users.push();
-                root = new Firebase("https://ehprotocol.firebaseio.com/users/" + newChildRef.getKey() + "/");
-                Firebase usernameChild = root.child("Username");
-                usernameChild.setValue(username);
-                Firebase passwordChild = root.child("Password");
-                passwordChild.setValue(password);
-                Firebase deviceID = root.child("Device IDs");
-                Firebase contacts = root.child("Contacts");
+            if (validatePassword() & validateUsername() & confirmPassword()  /*&alreadyExists()*/) {
+                username = usernameInput.getEditText().getText().toString().trim();
+                password = passwordInput.getEditText().getText().toString();
+
+
+
+                Document newUser = new Document()
+                        .append("username", username)
+                        .append("password", password)
+                        .append("contacts", Arrays.asList()
+                        );
+             //   usersCollection.insertOne(newUser);
+                final Task<RemoteInsertOneResult> insertTask = usersCollection.insertOne(newUser);
+                insertTask.addOnCompleteListener(new OnCompleteListener<RemoteInsertOneResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task <RemoteInsertOneResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("app", String.format("successfully inserted item with id %s",
+                                    task.getResult().getInsertedId()));
+                        } else {
+                            Log.e("app", "failed to insert document with: ", task.getException());
+                        }
+                    }
+                });
+
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             }
@@ -60,7 +102,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
     }
 
-    private boolean alreadyExists(){
+/*    private boolean alreadyExists(){
         Firebase userRef= new Firebase("https://ehprotocol.firebaseio.com/users/");
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference userNameRef = rootRef.child("users");
@@ -82,7 +124,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         };
         queries.addListenerForSingleValueEvent(eventListener);
         return flag[0];
-    }
+    }*/
 
     private boolean validatePassword() {
         username = usernameInput.getEditText().getText().toString().trim();

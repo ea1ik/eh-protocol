@@ -10,17 +10,40 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.ImageButton;
 
+// Base Stitch Packages
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+// Stitch Authentication Packages
+import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+// MongoDB Service Packages
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+// Utility Packages
+import com.mongodb.stitch.core.internal.common.BsonUtils;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.mongodb.stitch.android.core.Stitch;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Debug";
-
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection usersCollection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Stitch.initializeDefaultAppClient("networksproject-cfpxi");
+
+        //stitchClient = Stitch.getDefaultAppClient();
+        //mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        //usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         ImageButton enterButton = findViewById(R.id.enterButton);
 
         String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID); //get ID of device
