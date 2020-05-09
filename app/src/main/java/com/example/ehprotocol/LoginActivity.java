@@ -2,6 +2,7 @@ package com.example.ehprotocol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +18,7 @@ import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 // Stitch Authentication Packages
 import com.mongodb.stitch.android.core.auth.StitchUser;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
@@ -25,6 +27,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 // Utility Packages
 import com.mongodb.stitch.core.internal.common.BsonUtils;
+
+import org.bson.Document;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -80,7 +84,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(final String username, final String password) {
-     /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
+        Document filterDoc = new Document()
+                .append("username", username);
+
+
+        }
+
+        /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -104,16 +114,16 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });*/
-    }
+    //}
 
-    private boolean validateUsername() {
+    /*private boolean validateUsername() {
         if(usernameText.getEditText().getText().toString().isEmpty()){
             usernameText.setError("Field is empty");
             return false;
         }
         usernameText.setError(null);
         return true;
-    }
+    }*/
 
     private boolean validatePassword() {
         if(passwordText.getEditText().getText().toString().isEmpty()){
