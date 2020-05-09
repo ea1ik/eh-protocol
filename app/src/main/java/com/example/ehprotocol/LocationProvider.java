@@ -45,7 +45,7 @@ public class LocationProvider extends JobService {
                     else{
                         Log.d(TAG, "error");
                     }
-                    // push it to the databas
+                    // push it to the database
                     // query to see if anyone is nearby
                     // compare it with other locations
                     // update database
