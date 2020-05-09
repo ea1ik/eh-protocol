@@ -23,6 +23,8 @@ public class LocationProvider extends JobService {
     private int refreshRate = 10; // in seconds
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    private static Location location;
+
     @Override
     public boolean onStartJob(JobParameters params) {
         doBackgroundWork(params);
@@ -36,6 +38,13 @@ public class LocationProvider extends JobService {
             public void run() {
                 while (count < 15 * (60 / refreshRate)) {
                     getLocation();
+                    if(location!= null) {
+                        Log.d(TAG, "Latitude: " + location.getLatitude());
+                        Log.d(TAG, "Longitude: " + location.getLongitude());
+                    }
+                    else{
+                        Log.d(TAG, "error");
+                    }
                     // push it to the database
                     // query to see if anyone is nearby
                     // compare it with other locations
@@ -67,9 +76,8 @@ public class LocationProvider extends JobService {
                         new LocationCallback() {
                             @Override
                             public void onLocationResult(LocationResult locationResult) {
-                                Location location = locationResult.getLastLocation();
-                                Log.d(TAG, "Latitude " + count + ": " + location.getLatitude());
-                                Log.d(TAG, "Longitude: " + count + ": " + location.getLongitude());
+                                location = locationResult.getLastLocation();
+
                             }
                         },
                         Looper.myLooper()

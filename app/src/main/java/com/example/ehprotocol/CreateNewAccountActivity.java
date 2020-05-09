@@ -6,33 +6,29 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-// Base Stitch Packages
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
-// Stitch Authentication Packages
 import com.mongodb.stitch.android.core.auth.StitchUser;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
-// MongoDB Service Packages
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-// Utility Packages
-import com.mongodb.stitch.core.internal.common.BsonUtils;
-import com.mongodb.stitch.core.services.mongodb.remote.RemoteInsertOneResult;
 
 import org.bson.Document;
 
 import java.util.Arrays;
 
+// Base Stitch Packages
+// Stitch Authentication Packages
+// MongoDB Service Packages
+// Utility Packages
+
 public class CreateNewAccountActivity extends AppCompatActivity {
-    final String Debugg="stuff";
+    final String Debugg = "stuff";
     private TextInputLayout usernameInput, passwordInput, confirmPasswordInput;
     private String username, password, confirmPassword;
     private boolean remember;
@@ -46,14 +42,15 @@ public class CreateNewAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Stitch.getDefaultAppClient().getAuth().loginWithCredential(new AnonymousCredential()).addOnCompleteListener(new OnCompleteListener<StitchUser>() {
-                                                                                                                        @Override
-                                                                                                                        public void onComplete(@NonNull final Task<StitchUser> task) {
-                                                                                                                            if (task.isSuccessful()) {
-                                                                                                                                Log.d("stitch", "logged in anonymously");
-                                                                                                                            } else {
-                                                                                                                                Log.e("stitch", "failed to log in anonymously", task.getException());
-                                                                                                                            }
-                                                                                                                        }});
+            @Override
+            public void onComplete(@NonNull final Task<StitchUser> task) {
+                if (task.isSuccessful()) {
+                    Log.d("stitch", "logged in anonymously");
+                } else {
+                    Log.e("stitch", "failed to log in anonymously", task.getException());
+                }
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_account);
 
@@ -77,13 +74,13 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
                 Document filterDoc = new Document()
                         .append("username", username);
-                usersCollection.count(filterDoc).addOnCompleteListener(new OnCompleteListener <Long> () {
+                usersCollection.count(filterDoc).addOnCompleteListener(new OnCompleteListener<Long>() {
                     @Override
-                    public void onComplete(@NonNull Task <Long> task) {
+                    public void onComplete(@NonNull Task<Long> task) {
                         if (task.isSuccessful()) {
                             Long numDocs = task.getResult();
                             Log.d(Debugg, numDocs.toString());
-                            if (numDocs.longValue()==0l){
+                            if (numDocs.longValue() == 0l) {
                                 Log.d(Debugg, "inside");
                                 Document newUser = new Document()
                                         .append("username", username)
@@ -93,17 +90,13 @@ public class CreateNewAccountActivity extends AppCompatActivity {
                                 usersCollection.insertOne(newUser);
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
-                                }
-                            else{
+                            } else {
                                 Log.d(Debugg, "inside else");
                                 usernameInput.setError("Username already exists.");
                             }
                         }
                     }
                 });
-
-
-
             }
         });
 
@@ -116,7 +109,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
             passwordInput.setError("Field is empty");
             return false;
         }
-        if (password.length() <8 ) {
+        if (password.length() < 8) {
             passwordInput.setError("Password must be at least 8 characters.");
             return false;
         }
