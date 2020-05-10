@@ -5,9 +5,12 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.ImageButton;
 
 // Base Stitch Packages
@@ -56,8 +59,16 @@ public class MainActivity extends AppCompatActivity {
         runBackgroundLocationCheck();
 
         enterButton.setOnClickListener(e -> {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String userid = preferences.getString("ID", null);
+            if (userid != null){
+                Log.d("hi", "in");
+                Intent startIntent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                startActivity(startIntent);
+            }
+            else{
             Intent startIntent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(startIntent);
+            startActivity(startIntent);}
         });
     }
 

@@ -1,7 +1,9 @@
 package com.example.ehprotocol;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import org.bson.Document;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,12 +87,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(final String username, final String password) throws FileNotFoundException {
-
-        //Store Current User
-//        PrintWriter pw = new PrintWriter(new FileOutputStream(new File("current_credentials")));
- //       pw.println(/*id*/);
-  //      pw.println(/*username*/);
-
         Document filterDoc = new Document().append("username", username);
 
         RemoteFindIterable findResults = usersCollection
@@ -110,6 +107,11 @@ public class LoginActivity extends AppCompatActivity {
                         if(password.equals(items.get(0).get("password").toString())){
                             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                             startActivity(intent);
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("ID",items.get(0).get("_id").toString());
+                            editor.putString("username",items.get(0).get("username").toString());
+                            editor.apply();
                         }
                         else{
                             usernameText.setError("Invalid username or password.");
@@ -143,4 +145,5 @@ public class LoginActivity extends AppCompatActivity {
         passwordText.setError(null);
         return true;
     }
+
 }

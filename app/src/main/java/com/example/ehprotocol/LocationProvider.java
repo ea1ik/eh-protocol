@@ -16,6 +16,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
+
 public class LocationProvider extends JobService {
     private static final String TAG = "Debug";
     private boolean jobCancelled = false;
