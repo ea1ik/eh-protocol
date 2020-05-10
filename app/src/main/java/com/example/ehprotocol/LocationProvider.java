@@ -16,7 +16,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-
 import com.google.android.gms.tasks.Task;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
@@ -26,7 +25,6 @@ import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 public class LocationProvider extends JobService {
@@ -58,54 +56,52 @@ public class LocationProvider extends JobService {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String user = preferences.getString("username", null);
                 Document filterDoc = new Document().append("username", user);
-                if (user != null){
-                while (count < 15 * (60 / refreshRate)) {
-                    getLocation();
-                    if(location!= null) {
-                        Log.d(TAG, "Latitude: " + location.getLatitude());
-                        Log.d(TAG, "Longitude: " + location.getLongitude());
+                if (user != null) {
+                    while (count < 15 * (60 / refreshRate)) {
+                        getLocation();
+                        if (location != null) {
+                            String message = "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude();
+                           // NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, ".", message);
 
-                        Document updateDoc = new Document().append("$set",
-                                new Document().append("location", Arrays.asList(location.getLatitude(), location.getLongitude())
-                                ));
+                            Document updateDoc = new Document().append("$set",
+                                    new Document().append("location", Arrays.asList(location.getLatitude(), location.getLongitude())
+                                    ));
 
-                        final Task<RemoteUpdateResult> updateTask =
-                                usersCollection.updateOne(filterDoc, updateDoc);
-                        updateTask.addOnCompleteListener(new OnCompleteListener <RemoteUpdateResult> () {
-                            @Override
-                            public void onComplete(@NonNull Task <RemoteUpdateResult> task) {
-                                if (task.isSuccessful()) {
-                                    long numMatched = task.getResult().getMatchedCount();
-                                    long numModified = task.getResult().getModifiedCount();
-                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
-                                            numMatched, numModified));
-                                } else {
-                                    Log.e("app", "failed to update document with: ", task.getException());
+                            final Task<RemoteUpdateResult> updateTask =
+                                    usersCollection.updateOne(filterDoc, updateDoc);
+                            updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
+                                    if (task.isSuccessful()) {
+                                        long numMatched = task.getResult().getMatchedCount();
+                                        long numModified = task.getResult().getModifiedCount();
+                                        Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                                numMatched, numModified));
+                                    } else {
+                                        Log.e("app", "failed to update document with: ", task.getException());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        // push it to the database
+                        // query to see if anyone is nearby
+                        // compare it with other locations
+                        // update database
+                        try {
+                            Thread.sleep(refreshRate * 1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        count += 1;
                     }
-                    else{
-                        Log.d(TAG, "error");
-                    }
-                    // push it to the database
-                    // query to see if anyone is nearby
-                    // compare it with other locations
-                    // update database
-                    try {
-                        Thread.sleep(refreshRate*1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    count += 1;
+                    jobFinished(params, false);
+                    count = 0;
                 }
-                jobFinished(params, false);
-                count = 0;
-            }}
+            }
         }).start();
     }
 
-    private void getLocation(){
+    private void getLocation() {
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {

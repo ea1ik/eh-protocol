@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
 
+    private static final String CHANNEL_1_ID = "channel1";
     private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton;
     private TextView welcomeText;
 
@@ -45,6 +46,10 @@ public class MainMenuActivity extends AppCompatActivity {
         checkInButton.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), CheckIn.class);
             startActivity(intent);
+        });
+
+        aboutButton.setOnClickListener(e->{
+
         });
     }
 }

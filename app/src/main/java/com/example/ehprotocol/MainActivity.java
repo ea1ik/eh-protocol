@@ -13,30 +13,26 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageButton;
 
-// Base Stitch Packages
-import com.mongodb.stitch.android.core.Stitch;
-import com.mongodb.stitch.android.core.StitchAppClient;
-// Stitch Authentication Packages
-import com.mongodb.stitch.android.core.auth.StitchUser;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
-// MongoDB Service Packages
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-// Utility Packages
-import com.mongodb.stitch.core.internal.common.BsonUtils;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+
+// Base Stitch Packages
+// Stitch Authentication Packages
+// MongoDB Service Packages
+// Utility Packages
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Debug";
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection usersCollection;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(startIntent);}
         });
     }
+
+
 
     private void runBackgroundLocationCheck() {
         ComponentName componentName = new ComponentName(this, LocationProvider.class);
