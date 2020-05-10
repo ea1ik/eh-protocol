@@ -12,8 +12,6 @@ public class MainMenuActivity extends AppCompatActivity {
     private Button checkInButton, checkOutButton, testButton, aboutButton, logoutButton;
     private TextView welcomeText;
 
-    private String name;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,17 +23,15 @@ public class MainMenuActivity extends AppCompatActivity {
         aboutButton = findViewById(R.id.aboutButton);
         logoutButton = findViewById(R.id.logoutButton);
 
-        welcomeText = findViewById(R.id.welcomeText);
-
         Bundle extras = getIntent().getExtras();
-
-        if(extras != null){
-            name = extras.getString("username");
-            welcomeText.setText("Welcome, " + name);
-        }
 
         logoutButton.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        });
+
+        checkInButton.setOnClickListener(e->{
+            Intent intent = new Intent(getApplicationContext(), CheckIn.class);
             startActivity(intent);
         });
     }

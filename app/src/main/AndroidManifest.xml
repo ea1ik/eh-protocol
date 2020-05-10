@@ -3,17 +3,17 @@
     package="com.example.ehprotocol">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".EHProtocol"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".EHProtocol">
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".CheckIn"></activity>
         <activity android:name=".CreateNewAccountActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".LoginActivity" />
@@ -24,8 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".LocationProvider"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service
+            android:name=".LocationProvider"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

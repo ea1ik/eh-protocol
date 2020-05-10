@@ -8,25 +8,19 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.google.android.material.textfield.TextInputLayout;
-// Base Stitch Packages
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
-// Stitch Authentication Packages
-import com.mongodb.stitch.android.core.auth.StitchUser;
-import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
-import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential;
+
+// Base Stitch Packages
+// Stitch Authentication Packages
 // MongoDB Service Packages
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
 // Utility Packages
-import com.mongodb.stitch.core.internal.common.BsonUtils;
 
 import org.bson.Document;
 
@@ -56,8 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = (TextInputLayout) findViewById(R.id.passwordTextInput);
 
         newUser = findViewById(R.id.newUserTextView);
-        forgotPass = findViewById(R.id.forgotPasswordTextView);
-        errorText = findViewById(R.id.errorTextView);
 
         loginButton = findViewById(R.id.loginButton);
 
@@ -74,11 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
         newUser.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), CreateNewAccountActivity.class);
-            startActivity(intent);
-        });
-
-        forgotPass.setOnClickListener(e -> {
-            Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
             startActivity(intent);
         });
     }
