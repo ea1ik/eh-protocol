@@ -81,17 +81,15 @@ public class CreateNewAccountActivity extends AppCompatActivity {
                             Long numDocs = task.getResult();
                             Log.d(Debugg, numDocs.toString());
                             if (numDocs.longValue() == 0l) {
-                                Log.d(Debugg, "inside");
                                 Document newUser = new Document()
                                         .append("username", username)
                                         .append("password", password)
-                                        .append("contacts", Arrays.asList()
-                                        );
+                                        .append("contacts", Arrays.asList())
+                                        .append("location", Arrays.asList());
                                 usersCollection.insertOne(newUser);
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
                             } else {
-                                Log.d(Debugg, "inside else");
                                 usernameInput.setError("Username already exists.");
                             }
                         }

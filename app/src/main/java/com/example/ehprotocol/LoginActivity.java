@@ -2,6 +2,7 @@ package com.example.ehprotocol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -9,11 +10,24 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.mongodb.lang.NonNull;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+
+import org.bson.Document;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 // Base Stitch Packages
 // Stitch Authentication Packages
@@ -54,7 +68,11 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                signIn(usernameText.getEditText().getText().toString().trim(),passwordText.getEditText().getText().toString());
+                try {
+                    signIn(usernameText.getEditText().getText().toString().trim(),passwordText.getEditText().getText().toString());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -65,27 +83,47 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void signIn(final String username, final String password) {
-     /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
+    private void signIn(final String username, final String password) throws FileNotFoundException {
+
+        //Store Current User
+//        PrintWriter pw = new PrintWriter(new FileOutputStream(new File("current_credentials")));
+ //       pw.println(/*id*/);
+  //      pw.println(/*username*/);
+
+        Document filterDoc = new Document().append("username", username);
+
+        RemoteFindIterable findResults = usersCollection
+                .find(filterDoc);
+
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(username).exists()){
-                    User login = dataSnapshot.child(username).getValue(User.class);
-                    if (login.password.equals(password)){
-                        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                        startActivity(intent);
+            public void onComplete(@NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                    Log.d("app", String.format("successfully found %d documents", items.size()));
+                    if (items.size()==0){
+                        usernameText.setError("Invalid username or password.");
                     }
-                     else {
-                            passwordText.setError("Invalid username or password.");
+                    else{
+                        Log.d("app", items.get(0).get("password").toString());
+                        if(password.equals(items.get(0).get("password").toString())){
+                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                            startActivity(intent);
                         }
+                        else{
+                            usernameText.setError("Invalid username or password.");
+                        }
+                    }
+                    for (Document item: items) {
+                        Log.d("app", String.format("successfully found:  %s", item.toString()));
+                    }
                 } else {
-                    usernameText.setError("Invalid username or password.");
+                    usernameText.setError("Failed to connect. Try again.");
                 }
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });*/
+        });
+
     }
 
     private boolean validateUsername() {
