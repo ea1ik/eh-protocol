@@ -2,7 +2,6 @@ package com.example.ehprotocol;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
-
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
@@ -21,8 +19,6 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 // Stitch Authentication Packages
 // MongoDB Service Packages
 // Utility Packages
-
-import org.bson.Document;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signIn(usernameText.getEditText().getText().toString().trim(),passwordText.getEditText().getText().toString());
-
             }
 
         });
@@ -71,14 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(final String username, final String password) {
-        Document filterDoc = new Document()
-                .append("username", username);
-
-
-        }
-
-        /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
-
+     /*   users.addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(username).exists()){
@@ -90,27 +78,24 @@ public class LoginActivity extends AppCompatActivity {
                      else {
                             passwordText.setError("Invalid username or password.");
                         }
-
                 } else {
                     usernameText.setError("Invalid username or password.");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });*/
-    //}
+    }
 
-    /*private boolean validateUsername() {
+    private boolean validateUsername() {
         if(usernameText.getEditText().getText().toString().isEmpty()){
             usernameText.setError("Field is empty");
             return false;
         }
         usernameText.setError(null);
         return true;
-    }*/
+    }
 
     private boolean validatePassword() {
         if(passwordText.getEditText().getText().toString().isEmpty()){

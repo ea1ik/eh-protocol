@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private Button checkInButton, checkOutButton, testButton, aboutButton, logoutButton;
+    private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton;
     private TextView welcomeText;
 
     @Override
@@ -19,7 +19,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         checkInButton = findViewById(R.id.checkInButton);
         checkOutButton = findViewById(R.id.checkOutButton);
-        testButton = findViewById(R.id.testButton);
+        statistics = findViewById(R.id.statisticsButton);
         aboutButton = findViewById(R.id.aboutButton);
         logoutButton = findViewById(R.id.logoutButton);
 
@@ -27,6 +27,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
         logoutButton.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        });
+
+        statistics.setOnClickListener(e->{
+            Intent intent = new Intent(getApplicationContext(), Statistics.class);
             startActivity(intent);
         });
 
