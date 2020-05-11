@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.mongodb.BasicDBObject;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
@@ -26,8 +27,12 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+import org.bson.BsonDateTime;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,14 +133,13 @@ public class LocationProvider extends JobService {
                                                 Double newlon = (Double) newloc.get(1);
                                                 double distance=distance(lat,lon,newlat,newlon);
                                                  if (distance < 5) {
-                                                     Document contacts=new Document();
-                                                    contacts.append("id", item.get("_id").toString()).append("date", LocalDateTime.now());
-                                                    Log.d("c", contacts.toString());
+                                                    Document contacts=new Document();
+                                                    contacts.append("id", item.get("_id").toString()).append("date", new BsonDateTime(System.currentTimeMillis()));
                                                     if( !inSideArrayList(contacts, contact_people)){
                                                         Log.d("list", String.valueOf(contact_people.size()));
                                                         Log.d("hh",  item.get("_id").toString());
                                                         Document update2 = new Document().append("$push",
-                                                                new Document().append("contacts", (BSONObject) contacts)
+                                                                new Document().append("contacts", contacts)
                                                         );
                                                         final Task<RemoteUpdateResult> updateTask2 =
                                                                 usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), update2);
