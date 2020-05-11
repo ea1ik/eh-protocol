@@ -12,11 +12,19 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment {
 
+    public boolean today, bounded;
+
+    public DatePickerFragment(boolean today, boolean bounded){
+        this.today = today;
+        this.bounded = bounded;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, -1);
+        if(!today)
+            c.add(Calendar.DATE, -1);
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
@@ -27,8 +35,10 @@ public class DatePickerFragment extends DialogFragment {
         firstDay.set(Calendar.DAY_OF_MONTH, 22);
 
         DatePickerDialog datePicker =  new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
-        datePicker.getDatePicker().setMaxDate(c.getTimeInMillis());
-        datePicker.getDatePicker().setMinDate(firstDay.getTimeInMillis());
+        if (bounded) {
+            datePicker.getDatePicker().setMaxDate(c.getTimeInMillis());
+            datePicker.getDatePicker().setMinDate(firstDay.getTimeInMillis());
+        }
 
         return datePicker;
     }

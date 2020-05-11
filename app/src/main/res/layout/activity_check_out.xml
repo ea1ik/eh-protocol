@@ -5,22 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".CheckIn">
+    tools:context=".CheckOut">
 
     <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.871"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925"
-        app:srcCompat="@drawable/ic_send_black_24dp" />
-
-    <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imageView7"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,6 +18,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.549"
         app:srcCompat="@drawable/calendar" />
+
+    <ImageButton
+        android:id="@+id/backbutton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#2FFFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.475" />
+
+    <Button
+        android:id="@+id/chooseDate"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="#6CFFFFFF"
+        android:text="Change Date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.818"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
 
     <EditText
         android:id="@+id/code3"
@@ -84,25 +110,25 @@
         android:id="@+id/positivityCB"
         android:layout_width="320dp"
         android:layout_height="75dp"
-        android:text="I hereby declare that the patient currently logged into this account has positively tested for the COVID-19 Virus"
+        android:text="I hereby declare that the patient has tested negative 6 times before filling the information above and below."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.675" />
+        app:layout_constraintVertical_bias=".675" />
 
     <CheckBox
         android:id="@+id/cautionsCB"
         android:layout_width="320dp"
         android:layout_height="75dp"
-        android:text="I hereby declare that all the necessary instructions and precautions are given to the patient"
+        android:text="I hereby declare that all the necessary instructions and precautions are given to the patient."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias=".8" />
 
     <EditText
         android:id="@+id/code5"
@@ -158,14 +184,14 @@
         android:id="@+id/textView6"
         android:layout_width="320dp"
         android:layout_height="120dp"
-        android:text="This page is strictly related to your exposure to the COVID-19 Virus. If you think you have been exposed or are showing syptoms, please head the nearest center and get tested. Your doctor will fill out this page if you've tested positive."
-        android:textSize="16sp"
+        android:text="This page is strictly related to your exposure to the COVID-19 Virus. If your medical doctor sees fit, and after you've been cleared, you will be checked out. "
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias=".1" />
 
     <EditText
         android:id="@+id/code8"
@@ -192,43 +218,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
-    <Button
-        android:id="@+id/chooseDate"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:background="#83FFFFFF"
-        android:text="Change Date"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.818"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55" />
-
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".475" />
-
-    <ImageButton
-        android:id="@+id/backbutton"
+    <ImageView
+        android:id="@+id/imageView9"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="#4EFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintHorizontal_bias="0.871"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.925"
-        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+        app:srcCompat="@drawable/ic_send_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

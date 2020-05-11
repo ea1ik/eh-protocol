@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,6 +35,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
     private boolean remember;
 
     private Button createAccount;
+    private ImageButton backButton;
 
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
@@ -96,6 +98,13 @@ public class CreateNewAccountActivity extends AppCompatActivity {
                     }
                 });
             }
+        });
+
+        backButton = findViewById(R.id.backbuttonCreateAccount);
+
+        backButton.setOnClickListener(e->{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         });
 
     }

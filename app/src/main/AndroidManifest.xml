@@ -3,7 +3,7 @@
     package="com.example.ehprotocol">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Statistics"></activity>
+        <activity android:name=".CheckOut"></activity>
+        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".Statistics" />
         <activity android:name=".CheckIn" />
         <activity android:name=".CreateNewAccountActivity" />
         <activity android:name=".MainMenuActivity" />

@@ -5,15 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity implements PopUpMessage.LoggingOut {
     public static final String TAG = "FrontendDebug";
 
     private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton;
-    private TextView welcomeText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,31 +25,47 @@ public class MainMenuActivity extends AppCompatActivity {
         aboutButton = findViewById(R.id.aboutButton);
         logoutButton = findViewById(R.id.logoutButton);
 
-        Bundle extras = getIntent().getExtras();
 
-        logoutButton.setOnClickListener(e->{
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("ID",null);
-            editor.putString("username",null);
-            editor.apply();
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+        logoutButton.setOnClickListener(e -> {
+            openDialog();
         });
 
-        statistics.setOnClickListener(e->{
+        statistics.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), Statistics.class);
             startActivity(intent);
         });
 
-        checkInButton.setOnClickListener(e->{
+        checkInButton.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), CheckIn.class);
             startActivity(intent);
         });
 
-        aboutButton.setOnClickListener(e->{
-
-
+        checkOutButton.setOnClickListener(e -> {
+            Intent intent = new Intent(getApplicationContext(), CheckOut.class);
+            startActivity(intent);
         });
+
+        aboutButton.setOnClickListener(e -> {
+            Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    public void openDialog() {
+        PopUpMessage dialog = new PopUpMessage("Are you sure you want to logout? We personally do not advise you so, " +
+                "unless you are logging in on another device.", "Yes, I'm sure", "Cancel");
+        dialog.show(getSupportFragmentManager(), "Dialog");
+
+    }
+
+    @Override
+    public void onConfirm() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("ID", null);
+        editor.putString("username", null);
+        editor.apply();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }

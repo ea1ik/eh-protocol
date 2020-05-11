@@ -21,7 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "FrontendDebug";
 
     private TextView code1, code2, code3, code4, code5, code6, code7, code8;
@@ -29,14 +29,14 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
     private CheckBox positive, caution;
     private Button chooseDate, finalize;
 
-    private ImageButton backbuttonCI;
+    private ImageButton backbuttonCO;
 
     private String fullCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_in);
+        setContentView(R.layout.activity_check_out);
 
         code1 = findViewById(R.id.code1);
         code2 = findViewById(R.id.code2);
@@ -269,7 +269,6 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
         dateTextView.setText(DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime()));
 
         finalize.setOnClickListener(e->{
-            getCode();
             if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
                 Toast.makeText(getApplicationContext(), "ok bro", Toast.LENGTH_SHORT).show();
             }
@@ -283,15 +282,17 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-        backbuttonCI = findViewById(R.id.backbutton);
+        backbuttonCO = findViewById(R.id.backbutton);
 
-        backbuttonCI.setOnClickListener(e->{
+        backbuttonCO.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
             startActivity(intent);
         });
+
     }
 
     private boolean validateCode(String fullCode) {
+        getCode();
         if(fullCode.length() != 9)
             return false;
         return true;

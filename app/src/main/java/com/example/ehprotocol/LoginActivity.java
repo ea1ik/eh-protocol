@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,11 +25,7 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 
 import org.bson.Document;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static boolean rememberMe;
 
+    private ImageButton backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         stitchClient = Stitch.getDefaultAppClient();
@@ -66,8 +65,6 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = findViewById(R.id.loginButton);
 
-        rememberMeCB = findViewById(R.id.rememberMeCB);
-
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -82,6 +79,13 @@ public class LoginActivity extends AppCompatActivity {
 
         newUser.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), CreateNewAccountActivity.class);
+            startActivity(intent);
+        });
+
+        backButton = findViewById(R.id.backbuttonLogin);
+
+        backButton.setOnClickListener(e->{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
     }

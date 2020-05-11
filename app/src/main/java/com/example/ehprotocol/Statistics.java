@@ -1,9 +1,11 @@
 package com.example.ehprotocol;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,12 +33,14 @@ public class Statistics extends AppCompatActivity implements DatePickerDialog.On
             totalActiveTextView, newCasesTextView, newDeathsTextView, newRecoveriesTextView,
             currentDateTextView;
 
+    private ImageButton backbutton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        queue= Volley.newRequestQueue(this);
+        queue = Volley.newRequestQueue(this);
 
         changeDate = findViewById(R.id.datePicker);
 
@@ -60,8 +64,15 @@ public class Statistics extends AppCompatActivity implements DatePickerDialog.On
         }
 
         changeDate.setOnClickListener(e -> {
-            DialogFragment datePicker = new DatePickerFragment();
+            DialogFragment datePicker = new DatePickerFragment(false, true);
             datePicker.show(getSupportFragmentManager(), "date picker");
+        });
+
+        backbutton = findViewById(R.id.backbutton);
+
+        backbutton.setOnClickListener(e -> {
+            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+            startActivity(intent);
         });
 
     }
@@ -122,14 +133,15 @@ public class Statistics extends AppCompatActivity implements DatePickerDialog.On
                                     dailyDeaths = totalDeaths - prevDeaths;
                                     dailyRecoveries = totalRecovered - prevRecoveries;
 
-                                    totalCasesTextView.setText(""+totalCases);
-                                    totalActiveTextView.setText(""+totalActive);
-                                    totalDeathsTextView.setText(""+totalDeaths);
-                                    totalRecoveriesTextView.setText(""+totalRecovered);
-                                    newCasesTextView.setText(""+dailyCases);
-                                    newDeathsTextView.setText(""+dailyDeaths);
-                                    newRecoveriesTextView.setText(""+dailyRecoveries);
                                     currentDateTextView.setText(DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime()));
+
+                                    totalCasesTextView.setText("" + totalCases);
+                                    totalActiveTextView.setText("" + totalActive);
+                                    totalDeathsTextView.setText("" + totalDeaths);
+                                    totalRecoveriesTextView.setText("" + totalRecovered);
+                                    newCasesTextView.setText("+" + dailyCases );
+                                    newDeathsTextView.setText("+" + dailyDeaths);
+                                    newRecoveriesTextView.setText("+" + dailyRecoveries);
                                 }
                             }
                         } catch (Exception e) {
