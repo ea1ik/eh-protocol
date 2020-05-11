@@ -88,21 +88,34 @@ public class LocationProvider extends JobService {
                             });
                             double lat=location.getLatitude();
                             double lon=location.getLongitude();
-                            RemoteFindIterable findResults = usersCollection
-                                    .find();
                             //find my acc & get my list
+                            ArrayList<String> contact_people = new ArrayList();
+                            user = preferences.getString("username", null);
                             RemoteFindIterable myAcc = usersCollection
                                     .find(new Document().append("username",preferences.getString("username", null)));
 
-                            final ArrayList<String>[] contact_people = new ArrayList[1];
-                            Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
+                           Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
                             itemTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
                                 @Override
                                 public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
                                     if (task.isSuccessful()) {
+                                        Log.d("h", "hello");
                                         List<Document> items = task.getResult();
-                                        contact_people[0] = (ArrayList<String>) items.get(0).get("contacts");
+                                        ArrayList<String> list = (ArrayList<String>) items.get(0).get("contacts");
+                                        Log.d("size", String.valueOf(list.size()));
+                                        for (String a : list){
+                                            contact_people.add(a);
+                                        }
+                                        Log.d("inside", String.valueOf(contact_people.size()));
+
+
                                     }}});
+
+                            Log.d("out", String.valueOf(contact_people.size()));
+
+                            RemoteFindIterable findResults = usersCollection
+                                    .find();
+
                             Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
                             itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
                                 @Override
@@ -111,7 +124,6 @@ public class LocationProvider extends JobService {
                                         List<Document> items = task.getResult();
                                         String contacts;
                                         for (Document item: items) {
-                                            Log.d("hh",  item.get("_id").toString());
                                             ArrayList newloc= (ArrayList) item.get("location");
                                             if(newloc.size()!=0){
                                                 Double newlat = (Double)newloc.get(0);
@@ -119,7 +131,9 @@ public class LocationProvider extends JobService {
                                                 double distance=distance(lat,lon,newlat,newlon);
                                                  if (distance < 5) {
                                                     contacts=item.get("_id").toString();
-                                                    if(contact_people[0].size()!=0 && !inSideArrayList(contacts, contact_people[0])){
+                                                    if( !inSideArrayList(contacts, contact_people)){
+                                                        Log.d("list", String.valueOf(contact_people.size()));
+                                                        Log.d("hh",  item.get("_id").toString());
                                                         Document update2 = new Document().append("$push",
                                                                 new Document().append("contacts", contacts)
                                                         );
@@ -129,7 +143,7 @@ public class LocationProvider extends JobService {
                                                             @Override
                                                             public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
                                                                 if (task.isSuccessful()) {
-                                                                    contact_people[0].add(item.get("_id").toString());
+                                                                    contact_people.add(item.get("_id").toString());
                                                                     long numMatched = task.getResult().getMatchedCount();
                                                                     long numModified = task.getResult().getModifiedCount();
                                                                     Log.d("app", String.format("successfully matched %d and modified %d documents",
@@ -173,6 +187,8 @@ public class LocationProvider extends JobService {
     }
 
     private boolean inSideArrayList(String contacts, ArrayList<String> contact_people) {
+        if (contact_people.size()==0)
+            return false;
         for (String a : contact_people){
             if (a.equals(contacts))
                     return true;
