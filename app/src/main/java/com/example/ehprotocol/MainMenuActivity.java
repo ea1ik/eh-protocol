@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
+    public static final String TAG = "FrontendDebug";
 
-    private static final String CHANNEL_1_ID = "channel1";
     private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton;
     private TextView welcomeText;
 

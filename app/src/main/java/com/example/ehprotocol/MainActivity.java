@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         runBackgroundLocationCheck();
+        checkForUpdatedCases();
 
         enterButton.setOnClickListener(e -> {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -68,12 +69,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void runBackgroundLocationCheck() {
         ComponentName componentName = new ComponentName(this, LocationProvider.class);
         JobInfo info = new JobInfo.Builder(123, componentName)
                 .setPersisted(true).setPeriodic(15 * 60 * 1000).build();
+        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = scheduler.schedule(info);
+        if (resultCode == JobScheduler.RESULT_SUCCESS) {
+            // success
+        } else {
+            // failure
+        }
+    }
+
+    public void checkForUpdatedCases() {
+        ComponentName componentName = new ComponentName(this, DailyCasesUpdater.class);
+        JobInfo info = new JobInfo.Builder(445, componentName)
+                .setPersisted(true)
+                .setPeriodic(15 * 60 * 1000)
+                .build();
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = scheduler.schedule(info);
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
