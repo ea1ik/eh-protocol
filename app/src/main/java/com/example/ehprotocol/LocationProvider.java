@@ -25,8 +25,10 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
+import org.bson.BSONObject;
 import org.bson.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,13 +43,14 @@ public class LocationProvider extends JobService {
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection usersCollection;
     private static Location location;
-
+    private ArrayList<Document> contact_people;
     @Override
     public boolean onStartJob(JobParameters params) {
         stitchClient = Stitch.getDefaultAppClient();
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        contact_people = new ArrayList();
         doBackgroundWork(params);
         return true;
 
@@ -89,10 +92,9 @@ public class LocationProvider extends JobService {
                             double lat=location.getLatitude();
                             double lon=location.getLongitude();
                             //find my acc & get my list
-                            ArrayList<String> contact_people = new ArrayList();
                             user = preferences.getString("username", null);
                             RemoteFindIterable myAcc = usersCollection
-                                    .find(new Document().append("username",preferences.getString("username", null)));
+                                    .find(new Document().append("username",user));
 
                            Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
                             itemTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
@@ -101,15 +103,12 @@ public class LocationProvider extends JobService {
                                     if (task.isSuccessful()) {
                                         Log.d("h", "hello");
                                         List<Document> items = task.getResult();
-                                        ArrayList<String> list = (ArrayList<String>) items.get(0).get("contacts");
+                                        ArrayList<Document> list = (ArrayList<Document>) items.get(0).get("contacts");
                                         Log.d("size", String.valueOf(list.size()));
-                                        for (String a : list){
+                                        for (Document a : list){
                                             contact_people.add(a);
                                         }
                                         Log.d("inside", String.valueOf(contact_people.size()));
-
-
-                                    }}});
 
                             Log.d("out", String.valueOf(contact_people.size()));
 
@@ -122,7 +121,6 @@ public class LocationProvider extends JobService {
                                 public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
                                     if (task.isSuccessful()) {
                                         List<Document> items = task.getResult();
-                                        String contacts;
                                         for (Document item: items) {
                                             ArrayList newloc= (ArrayList) item.get("location");
                                             if(newloc.size()!=0){
@@ -130,20 +128,22 @@ public class LocationProvider extends JobService {
                                                 Double newlon = (Double) newloc.get(1);
                                                 double distance=distance(lat,lon,newlat,newlon);
                                                  if (distance < 5) {
-                                                    contacts=item.get("_id").toString();
+                                                     Document contacts=new Document();
+                                                    contacts.append("id", item.get("_id").toString()).append("date", LocalDateTime.now());
+                                                    Log.d("c", contacts.toString());
                                                     if( !inSideArrayList(contacts, contact_people)){
                                                         Log.d("list", String.valueOf(contact_people.size()));
                                                         Log.d("hh",  item.get("_id").toString());
                                                         Document update2 = new Document().append("$push",
-                                                                new Document().append("contacts", contacts)
+                                                                new Document().append("contacts", (BSONObject) contacts)
                                                         );
                                                         final Task<RemoteUpdateResult> updateTask2 =
-                                                                usersCollection.updateOne(filterDoc, update2);
+                                                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), update2);
                                                         updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
                                                                 if (task.isSuccessful()) {
-                                                                    contact_people.add(item.get("_id").toString());
+                                                                    contact_people.add(new Document().append("id",item.get("_id").toString()).append("date", LocalDateTime.now()));
                                                                     long numMatched = task.getResult().getMatchedCount();
                                                                     long numModified = task.getResult().getModifiedCount();
                                                                     Log.d("app", String.format("successfully matched %d and modified %d documents",
@@ -163,7 +163,7 @@ public class LocationProvider extends JobService {
                                     }
                                 }
                             );
-
+                                    }}});
 
 
 
@@ -186,11 +186,14 @@ public class LocationProvider extends JobService {
         }).start();
     }
 
-    private boolean inSideArrayList(String contacts, ArrayList<String> contact_people) {
+    private boolean inSideArrayList(Document contacts, ArrayList<Document> contact_people) {
         if (contact_people.size()==0)
             return false;
-        for (String a : contact_people){
-            if (a.equals(contacts))
+        for (Document a : contact_people){
+            if (a.equals(contacts.get("id")))
+                if(((LocalDateTime) contacts.get("date")).equals(LocalDateTime.now().minusDays(1)))
+                    return false;
+                else
                     return true;
         }
         return false;
