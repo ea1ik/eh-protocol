@@ -36,6 +36,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class LocationProvider extends JobService {
@@ -55,7 +57,7 @@ public class LocationProvider extends JobService {
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        contact_people = new ArrayList();
+        contact_people = new ArrayList<>();
         doBackgroundWork(params);
         return true;
 
@@ -111,7 +113,7 @@ public class LocationProvider extends JobService {
                                         ArrayList<Document> list = (ArrayList<Document>) items.get(0).get("contacts");
                                         Log.d("size", String.valueOf(list.size()));
                                         for (Document a : list){
-                                            contact_people.add(a);
+                                            contact_people.add(new Document().append("_id",a.get("id").toString()).append("date", a.getDate("date")));
                                         }
                                         Log.d("inside", String.valueOf(contact_people.size()));
 
@@ -147,7 +149,7 @@ public class LocationProvider extends JobService {
                                                             @Override
                                                             public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
                                                                 if (task.isSuccessful()) {
-                                                                    contact_people.add(new Document().append("id",item.get("_id").toString()).append("date", LocalDateTime.now()));
+                                                                    contact_people.add(new Document().append("_id",item.get("_id").toString()).append("date", new BsonDateTime(System.currentTimeMillis())));
                                                                     long numMatched = task.getResult().getMatchedCount();
                                                                     long numModified = task.getResult().getModifiedCount();
                                                                     Log.d("app", String.format("successfully matched %d and modified %d documents",
@@ -194,12 +196,17 @@ public class LocationProvider extends JobService {
         if (contact_people.size()==0)
             return false;
         for (Document a : contact_people){
-            if (a.equals(contacts.get("id")))
-                if(((LocalDateTime) contacts.get("date")).equals(LocalDateTime.now().minusDays(1)))
+            if (a.get("_id").toString().equals(contacts.get("id"))){
+                Calendar c = Calendar.getInstance();
+                Date d =new Date(System.currentTimeMillis());
+                c.setTime(d);
+                c.add(Calendar.DATE, -1);
+                d.setTime( c.getTime().getTime() );
+                long millisec = d.getTime();
+                if(a.getDate("date").before(new Date(millisec)))
                     return false;
                 else
-                    return true;
-        }
+                    return true;}}
         return false;
     }
 
