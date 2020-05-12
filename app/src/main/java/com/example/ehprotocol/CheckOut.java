@@ -18,6 +18,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
+
+import org.bson.Document;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -28,7 +39,9 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
     private TextView dateTextView;
     private CheckBox positive, caution;
     private Button chooseDate, finalize;
-
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection codesCollection;
     private ImageButton backbuttonCO;
 
     private String fullCode = "";
@@ -37,7 +50,9 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_out);
-
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
         code1 = findViewById(R.id.code1);
         code2 = findViewById(R.id.code2);
         code3 = findViewById(R.id.code3);
@@ -270,7 +285,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
 
         finalize.setOnClickListener(e->{
             if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
-                Toast.makeText(getApplicationContext(), "ok bro", Toast.LENGTH_SHORT).show();
+                verifyCodeExists(fullCode);
             }
             else{
                 Toast.makeText(getApplicationContext(), "You have missing information or the code is invalid", Toast.LENGTH_SHORT).show();
@@ -290,7 +305,37 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         });
 
     }
+    private void verifyCodeExists(String code){
+        Document filterDoc = new Document().append("key", code);
 
+        final Task<Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
+        findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener<Document>() {
+            @Override
+            public void onComplete(@NonNull Task <Document> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() == null) {
+                        Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
+                        final Task<RemoteDeleteResult> deleteTask = codesCollection.deleteOne(filterDoc);
+                        deleteTask.addOnCompleteListener(new OnCompleteListener <RemoteDeleteResult> () {
+                            @Override
+                            public void onComplete(@NonNull Task <RemoteDeleteResult> task) {
+                                if (task.isSuccessful()) {
+                                    long numDeleted = task.getResult().getDeletedCount();
+                                    Log.d("app", String.format("successfully deleted %d documents", numDeleted));
+                                } else {
+                                    Log.e("app", "failed to delete document with: ", task.getException());
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Log.e("app", "Failed to findOne: ", task.getException());
+                }
+            }
+        });
+    }
     private boolean validateCode(String fullCode) {
         getCode();
         if(fullCode.length() != 9)

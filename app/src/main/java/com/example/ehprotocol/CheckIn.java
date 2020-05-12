@@ -290,7 +290,6 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
             getCode();
             if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
                 verifyCodeExists(fullCode);
-                Toast.makeText(getApplicationContext(), "ok bro", Toast.LENGTH_SHORT).show();
             }
             else{
                 Toast.makeText(getApplicationContext(), "You have missing information or the code is invalid", Toast.LENGTH_SHORT).show();
@@ -311,29 +310,6 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
     }
     private void verifyCodeExists(String code){
         Document filterDoc = new Document().append("key", code);
-/*
-        RemoteFindIterable findResults = codesCollection
-                .find(filterDoc);
-        Log.d("verifying1", "v");
-
-        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
-        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    Log.d("verifying", "v");
-                    List<Document> items = task.getResult();
-                    Log.d("app", String.format("successfully found %d documents", items.size()));
-                    if (items.size() == 0) {
-                        Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    Log.d("app", "notsuccessful");
-                }
-            }});*/
 
         final Task <Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
         findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener <Document> () {
