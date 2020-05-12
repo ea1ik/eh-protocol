@@ -26,6 +26,7 @@ import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
 
 import org.bson.Document;
 
@@ -343,6 +344,18 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                         Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
+                        final Task<RemoteDeleteResult> deleteTask = codesCollection.deleteOne(filterDoc);
+                        deleteTask.addOnCompleteListener(new OnCompleteListener <RemoteDeleteResult> () {
+                            @Override
+                            public void onComplete(@NonNull Task <RemoteDeleteResult> task) {
+                                if (task.isSuccessful()) {
+                                    long numDeleted = task.getResult().getDeletedCount();
+                                    Log.d("app", String.format("successfully deleted %d documents", numDeleted));
+                                } else {
+                                    Log.e("app", "failed to delete document with: ", task.getException());
+                                }
+                            }
+                        });
                     }
                 } else {
                     Log.e("app", "Failed to findOne: ", task.getException());
