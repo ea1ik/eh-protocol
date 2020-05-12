@@ -18,8 +18,21 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.lang.NonNull;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+
+import org.bson.Document;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "FrontendDebug";
@@ -28,7 +41,9 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
     private TextView dateTextView;
     private CheckBox positive, caution;
     private Button chooseDate, finalize;
-
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection codesCollection;
     private ImageButton backbuttonCI;
 
     private String fullCode = "";
@@ -37,7 +52,9 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_in);
-
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
         code1 = findViewById(R.id.code1);
         code2 = findViewById(R.id.code2);
         code3 = findViewById(R.id.code3);
@@ -271,6 +288,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
         finalize.setOnClickListener(e->{
             getCode();
             if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
+                verifyCodeExists(fullCode);
                 Toast.makeText(getApplicationContext(), "ok bro", Toast.LENGTH_SHORT).show();
             }
             else{
@@ -290,6 +308,49 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
             startActivity(intent);
         });
     }
+    private void verifyCodeExists(String code){
+        Document filterDoc = new Document().append("key", code);
+/*
+        RemoteFindIterable findResults = codesCollection
+                .find(filterDoc);
+        Log.d("verifying1", "v");
+
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    Log.d("verifying", "v");
+                    List<Document> items = task.getResult();
+                    Log.d("app", String.format("successfully found %d documents", items.size()));
+                    if (items.size() == 0) {
+                        Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Log.d("app", "notsuccessful");
+                }
+            }});*/
+
+        final Task <Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
+        findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener <Document> () {
+            @Override
+            public void onComplete(@NonNull Task <Document> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() == null) {
+                        Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e("app", "Failed to findOne: ", task.getException());
+                }
+            }
+        });
+    }
+
 
     private boolean validateCode(String fullCode) {
         if(fullCode.length() != 9)
