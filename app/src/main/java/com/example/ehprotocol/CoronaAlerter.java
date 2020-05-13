@@ -2,18 +2,39 @@ package com.example.ehprotocol;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.mongodb.stitch.android.core.Stitch;
+import com.mongodb.stitch.android.core.StitchAppClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
+import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
+
+import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoronaAlerter extends JobService {
     private static final String TAG = "Notifs";
     private boolean jobCancelled = false;
     private final int refreshRate = 10; // refreshRate seconds
     int count = 0;
-
-
+    String user;
+    private StitchAppClient stitchClient;
+    private RemoteMongoClient mongoClient;
+    private RemoteMongoCollection usersCollection;
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.d(TAG, "Task started");
+        stitchClient = Stitch.getDefaultAppClient();
+        mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         doBackgroundWork(params);
         return true;
     }
@@ -23,8 +44,10 @@ public class CoronaAlerter extends JobService {
             @Override
             public void run() {
                 while(count < 15 * (60 / refreshRate)) {
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    user = preferences.getString("username", null);
                     Log.d(TAG, "Job # " + count + " started");
-
+                    if (user != null) {
                     boolean isContacted = getStatus();
                     if(isContacted){
                         String title = "BIG ASS ALERT BUDDY";
@@ -32,7 +55,7 @@ public class CoronaAlerter extends JobService {
                                 +" BECAUSE THINGS ARE GONNA BE OKAY. SO DONT FUCKING WORRY AND STAY AT FUCKING HOME, DICK.";
                         NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, title, message);
                         resetStatus();
-                    }
+                    }}
 
                     try {
                         Thread.sleep(refreshRate*1000);
@@ -51,12 +74,39 @@ public class CoronaAlerter extends JobService {
     }
 
     private boolean getStatus() {
-        // comment the return status and query here
-        return false;
+        final boolean[] status = new boolean[1];
+        Document filterDoc = new Document().append("username", user);
+        RemoteFindIterable findResults = usersCollection
+                .find(filterDoc);
+        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+            @Override
+            public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
+                if (task.isSuccessful()) {
+                    List<Document> items = task.getResult();
+                    status[0] = items.get(0).getBoolean("isContact");
+                }}});
+        return status[0];
     }
 
     private void resetStatus() {
-        // make the isSick thingy false, and make the isSick thingy in the user class true
+        Document filterDoc = new Document().append("username", user);
+        Document updateStatus = new Document().append("$set",
+                new Document().append("isSick", false));
+        final Task<RemoteUpdateResult> updateTask =
+                usersCollection.updateOne(filterDoc, updateStatus);
+        updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                if (task.isSuccessful()) {
+                } else {
+                }
+            }
+        });
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("isContact","true");
+        editor.apply();
     }
 
     @Override
