@@ -2,7 +2,9 @@ package com.example.ehprotocol;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
 import org.bson.Document;
 
@@ -42,6 +45,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection codesCollection;
+    private RemoteMongoCollection usersCollection;
     private ImageButton backbuttonCO;
 
     private String fullCode = "";
@@ -53,6 +57,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         stitchClient = Stitch.getDefaultAppClient();
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
+        usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         code1 = findViewById(R.id.code1);
         code2 = findViewById(R.id.code2);
         code3 = findViewById(R.id.code3);
@@ -326,6 +331,24 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
                                     Log.d("app", String.format("successfully deleted %d documents", numDeleted));
                                 } else {
                                     Log.e("app", "failed to delete document with: ", task.getException());
+                                }
+                            }
+                        });
+                        Document updateStatus = new Document().append("$set",
+                                new Document().append("isSick", false));
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        final Task<RemoteUpdateResult> updateTask2 =
+                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), updateStatus);
+                        updateTask2.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                            @Override
+                            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                                if (task.isSuccessful()) {
+                                    long numMatched = task.getResult().getMatchedCount();
+                                    long numModified = task.getResult().getModifiedCount();
+                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                            numMatched, numModified));
+                                } else {
+                                    Log.e("app", "failed to update document with: ", task.getException());
                                 }
                             }
                         });

@@ -2,7 +2,9 @@ package com.example.ehprotocol;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,8 +29,11 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteFindIterable;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
+import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
+import org.bson.BsonDateTime;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -45,6 +50,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection codesCollection;
+    private RemoteMongoCollection usersCollection;
     private ImageButton backbuttonCI;
 
     private String fullCode = "";
@@ -56,6 +62,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
         stitchClient = Stitch.getDefaultAppClient();
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
+        usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         code1 = findViewById(R.id.code1);
         code2 = findViewById(R.id.code2);
         code3 = findViewById(R.id.code3);
@@ -332,6 +339,54 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                 }
                             }
                         });
+                        Document updateStatus = new Document().append("$set",
+                                new Document().append("isSick", true));
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        final Task<RemoteUpdateResult> updateTask2 =
+                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), updateStatus);
+                        updateTask2.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                            @Override
+                            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                                if (task.isSuccessful()) {
+                                    long numMatched = task.getResult().getMatchedCount();
+                                    long numModified = task.getResult().getModifiedCount();
+                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                            numMatched, numModified));
+                                } else {
+                                    Log.e("app", "failed to update document with: ", task.getException());
+                                }
+                            }
+                        });
+                        RemoteFindIterable myAcc = usersCollection
+                                .find(new Document().append("username",preferences.getString("username", null)));
+                        Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
+                        itemTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+                            @Override
+                            public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("h", "hello");
+                                    List<Document> items = task.getResult();
+                                    ArrayList<Document> list = (ArrayList<Document>) items.get(0).get("contacts");
+                                    for (Document a: list){
+                                        Document updateContactStatus = new Document().append("$set",
+                                                new Document().append("isContact", true));
+                                        final Task<RemoteUpdateResult> updateTaskContacts =
+                                                usersCollection.updateOne(new Document().append("_id", new ObjectId(a.get("id").toString())), updateContactStatus);
+                                        updateTaskContacts.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                                            @Override
+                                            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    long numMatched = task.getResult().getMatchedCount();
+                                                    long numModified = task.getResult().getModifiedCount();
+                                                    Log.d("app", String.format("successfully matched %d and modified %d documents",
+                                                            numMatched, numModified));
+                                                } else {
+                                                    Log.e("app", "failed to update document with: ", task.getException());
+                                                }
+                                            }
+                                        });
+                                    }
+                                }}});
                     }
                 } else {
                     Log.e("app", "Failed to findOne: ", task.getException());
