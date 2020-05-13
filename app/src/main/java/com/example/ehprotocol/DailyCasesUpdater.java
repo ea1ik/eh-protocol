@@ -2,7 +2,6 @@ package com.example.ehprotocol;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -34,7 +33,6 @@ public class DailyCasesUpdater extends JobService {
     @Override
     public boolean onStartJob(JobParameters params) {
         queue = Volley.newRequestQueue(this);
-        Log.d(TAG, "Job started");
         doBackgroundWork(params);
         return true;
     }
@@ -91,15 +89,11 @@ public class DailyCasesUpdater extends JobService {
 
                     thread.start();
                     count++;
-
-                    Log.d(TAG, "Thread Finished");
-
                     try {
                         Thread.sleep(refreshRate*1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.d(TAG, "Job Finished");
                 }
                 count = 0;
                 jobFinished(params, false);
