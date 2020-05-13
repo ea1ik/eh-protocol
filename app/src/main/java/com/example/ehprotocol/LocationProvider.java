@@ -200,7 +200,7 @@ public class LocationProvider extends JobService {
         if (contact_people.size()==0)
             return false;
         for (Document a : contact_people){
-            if (a.get("_id").toString().equals(contacts.get("id"))){
+            if (a.get("_id").equals(contacts.get("id"))){
                 Calendar c = Calendar.getInstance();
                 Date d =new Date(System.currentTimeMillis());
                 c.setTime(d);

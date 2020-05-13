@@ -87,7 +87,9 @@ public class CreateNewAccountActivity extends AppCompatActivity {
                                         .append("username", username)
                                         .append("password", password)
                                         .append("contacts", Arrays.asList())
-                                        .append("location", Arrays.asList());
+                                        .append("location", Arrays.asList())
+                                        .append("isSick", false)
+                                        .append("isContact", false);
                                 usersCollection.insertOne(newUser);
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
