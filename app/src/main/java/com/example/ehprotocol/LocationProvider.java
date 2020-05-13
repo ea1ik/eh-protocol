@@ -51,6 +51,8 @@ public class LocationProvider extends JobService {
     private RemoteMongoCollection usersCollection;
     private static Location location;
     private ArrayList<Document> contact_people;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
+
     @Override
     public boolean onStartJob(JobParameters params) {
         stitchClient = Stitch.getDefaultAppClient();
@@ -58,24 +60,25 @@ public class LocationProvider extends JobService {
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         contact_people = new ArrayList<>();
-        doBackgroundWork(params);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+         doBackgroundWork(params);
         return true;
-
     }
-
     private void doBackgroundWork(JobParameters params) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                String user = preferences.getString("username", null);
-                Document filterDoc = new Document().append("username", user);
-                if (user != null) {
-                    while (count < 15 * (60 / refreshRate)) {
 
+                    while (count < 15 * (60 / refreshRate)) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        String user = preferences.getString("username", null);
                             getLocation();
-                        if (location != null) {
+                            if (user != null) {
+
+                                Document filterDoc = new Document().append("username", user);
+                                if (location != null) {
                             String message = "Latitude: " + location.getLatitude() + "\n" + "Longitude: " + location.getLongitude();
                            // NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, ".", message);
 
@@ -174,6 +177,7 @@ public class LocationProvider extends JobService {
 
 
                         }
+                    }
 
                         // query to see if anyone is nearby
                         // compare it with other locations
@@ -184,7 +188,7 @@ public class LocationProvider extends JobService {
                             e.printStackTrace();
                         }
                         count += 1;
-                    }
+
                     jobFinished(params, false);
                     count = 0;
                 }
