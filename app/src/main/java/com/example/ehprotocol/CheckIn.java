@@ -387,6 +387,19 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                         });
                                     }
                                 }}});
+                        Document filterDoc = new Document().append("username", preferences.getString("username", null));
+                        Document updateStatusAgain = new Document().append("$set",
+                                new Document().append("isContact", false));
+                        final Task<RemoteUpdateResult> updateTask =
+                                usersCollection.updateOne(filterDoc, updateStatusAgain);
+                        updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                            @Override
+                            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                                if (task.isSuccessful()) {
+                                } else {
+                                }
+                            }
+                        });
                     }
                 } else {
                     Log.e("app", "Failed to findOne: ", task.getException());

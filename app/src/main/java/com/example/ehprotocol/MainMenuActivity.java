@@ -27,7 +27,7 @@ public class MainMenuActivity extends AppCompatActivity implements PopUpMessage.
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String isContact = preferences.getString("isContact", null);
-        //its a stringcant be a boolean so like do whatever warninghere 
+        //its a stringcant be a boolean so like do whatever warninghere
 
         logoutButton.setOnClickListener(e -> {
             openDialog();

@@ -48,14 +48,40 @@ public class CoronaAlerter extends JobService {
                     user = preferences.getString("username", null);
                     Log.d(TAG, "Job # " + count + " started");
                     if (user != null) {
-                    boolean isContacted = getStatus();
-                    if(isContacted){
-                        String title = "BIG ASS ALERT BUDDY";
-                        String message = "LISTEN HERE YOU LIL DUMBFUCK, YOU'VE BEEN FUCKED UP OK? I WANT YOU TO FUCKING CHILL YOU BIG DUMBASS"
-                                +" BECAUSE THINGS ARE GONNA BE OKAY. SO DONT FUCKING WORRY AND STAY AT FUCKING HOME, DICK.";
-                        NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, title, message);
-                        resetStatus();
-                    }}
+                        Document filterDoc = new Document().append("username", user);
+                        RemoteFindIterable findResults = usersCollection
+                                .find(filterDoc);
+                        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
+                        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
+                            @Override
+                            public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
+                                if (task.isSuccessful()) {
+                                    List<Document> items = task.getResult();
+                                    boolean isContacted = items.get(0).getBoolean("isContact");
+                                    if(isContacted){
+                                        String title = "BIG ASS ALERT BUDDY";
+                                        String message = "LISTEN HERE YOU LIL DUMBFUCK, YOU'VE BEEN FUCKED UP OK? I WANT YOU TO FUCKING CHILL YOU BIG DUMBASS"
+                                                +" BECAUSE THINGS ARE GONNA BE OKAY. SO DONT FUCKING WORRY AND STAY AT FUCKING HOME, DICK.";
+                                        NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, title, message);
+                                        Document updateStatus = new Document().append("$set",
+                                                new Document().append("isContact", false));
+                                        final Task<RemoteUpdateResult> updateTask =
+                                                usersCollection.updateOne(filterDoc, updateStatus);
+                                        updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
+                                            @Override
+                                            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
+                                                if (task.isSuccessful()) {
+                                                } else {
+                                                }
+                                            }
+                                        });
+                                        resetStatus();
+                                    }
+
+
+                                }}});
+                   // boolean isContacted = getStatus();
+                    }
 
                     try {
                         Thread.sleep(refreshRate*1000);
@@ -75,34 +101,13 @@ public class CoronaAlerter extends JobService {
 
     private boolean getStatus() {
         final boolean[] status = new boolean[1];
-        Document filterDoc = new Document().append("username", user);
-        RemoteFindIterable findResults = usersCollection
-                .find(filterDoc);
-        Task<List<Document>> itemsTask = findResults.into(new ArrayList<Document>());
-        itemsTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
-            @Override
-            public void onComplete(@com.mongodb.lang.NonNull Task<List<Document>> task) {
-                if (task.isSuccessful()) {
-                    List<Document> items = task.getResult();
-                    status[0] = items.get(0).getBoolean("isContact");
-                }}});
+
         return status[0];
     }
 
     private void resetStatus() {
         Document filterDoc = new Document().append("username", user);
-        Document updateStatus = new Document().append("$set",
-                new Document().append("isSick", false));
-        final Task<RemoteUpdateResult> updateTask =
-                usersCollection.updateOne(filterDoc, updateStatus);
-        updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
-            @Override
-            public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
-                if (task.isSuccessful()) {
-                } else {
-                }
-            }
-        });
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("isContact","true");
