@@ -68,7 +68,7 @@ public class Statistics extends AppCompatActivity implements DatePickerDialog.On
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-        backbutton = findViewById(R.id.backbutton);
+        backbutton = findViewById(R.id.backbuttonSTATS);
 
         backbutton.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);

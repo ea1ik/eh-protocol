@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".TipsActivity">
+
+    <ScrollView
+        android:layout_width="390dp"
+        android:layout_height="710dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:text="Prevention Tips (from WHO)"
+                android:textSize="26sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView49"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Wash your hands as much as you can with soap and water, or an alcohol based solution"
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginRight="10dp"
+                    app:srcCompat="@drawable/faq" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView17"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    app:srcCompat="@drawable/faq" />
+
+                <TextView
+                    android:id="@+id/textView51"
+                    android:layout_width="200dp"
+                    android:layout_height="125dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Maintain at least 1 m distance between yourself and others. If you are too close, you can breathe in the droplets, including the COVID-19 virus."
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView52"
+                    android:layout_width="200dp"
+                    android:layout_height="75dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Avoid going to crowded places, and stay at home during confinement!"
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/imageView18"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginVertical="10dp"
+                    app:srcCompat="@drawable/faq" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView19"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    app:srcCompat="@drawable/faq" />
+
+                <TextView
+                    android:id="@+id/textView53"
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Avoid touching eyes, nose and mouth. Hands touch many surfaces and can pick up viruses. "
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView56"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="5dp"
+                    android:text="Make sure you, and the people around you, follow good respiratory hygiene. This means covering your mouth and nose with your bent elbow or tissue when you cough or sneeze."
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/imageView22"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginVertical="10dp"
+                    app:srcCompat="@drawable/faq" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView20"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="40dp"
+                    app:srcCompat="@drawable/faq" />
+
+                <TextView
+                    android:id="@+id/textView54"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Stay home and self-isolate even with minor symptoms such as cough, headache, mild fever, until you recover. Have someone bring you supplies. If you need to leave your house, wear a mask to avoid infecting others."
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView57"
+                    android:layout_width="200dp"
+                    android:layout_height="75dp"
+                    android:layout_marginVertical="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="If you have a fever, cough and difficulty breathing, seek medical attention."
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/imageView23"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginRight="10dp"
+                    app:srcCompat="@drawable/faq" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView21"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    app:srcCompat="@drawable/faq" />
+
+                <TextView
+                    android:id="@+id/textView55"
+                    android:layout_width="200dp"
+                    android:layout_height="110dp"
+                    android:layout_marginVertical="10dp"
+                    android:text="Keep up to date on the latest information from trusted sources, such as the Ministry of Public Health, or our application!"
+                    android:textAlignment="center"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/backbuttonTIPS"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#4EFFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.978"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

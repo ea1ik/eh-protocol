@@ -59,9 +59,9 @@ public class CoronaAlerter extends JobService {
                                     List<Document> items = task.getResult();
                                     boolean isContacted = items.get(0).getBoolean("isContact");
                                     if(isContacted){
-                                        String title = "BIG ASS ALERT BUDDY";
-                                        String message = "LISTEN HERE YOU LIL DUMBFUCK, YOU'VE BEEN FUCKED UP OK? I WANT YOU TO FUCKING CHILL YOU BIG DUMBASS"
-                                                +" BECAUSE THINGS ARE GONNA BE OKAY. SO DONT FUCKING WORRY AND STAY AT FUCKING HOME, DICK.";
+                                        String title = "COVID-19 ALERT";
+                                        String message = "Our data has detected that you've recently been in contact with someone who tested positive to the COVID-19 virus."
+                                                + " You should immediately head to the nearest testing center to get tested, and follow the right procedures.";
                                         NotificationsSender.sendOverNotificationChannel(getApplicationContext(), NotificationsSender.HIGH_PRIORITY_CHANNEL, title, message);
                                         Document updateStatus = new Document().append("$set",
                                                 new Document().append("isContact", false));

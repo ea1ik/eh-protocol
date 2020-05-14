@@ -58,24 +58,24 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
-        code1 = findViewById(R.id.code1);
-        code2 = findViewById(R.id.code2);
-        code3 = findViewById(R.id.code3);
-        code4 = findViewById(R.id.code4);
-        code5 = findViewById(R.id.code5);
-        code6 = findViewById(R.id.code6);
-        code7 = findViewById(R.id.code7);
-        code8 = findViewById(R.id.code8);
+        code1 = findViewById(R.id.code1OUT);
+        code2 = findViewById(R.id.code2OUT);
+        code3 = findViewById(R.id.code3OUT);
+        code4 = findViewById(R.id.code4OUT);
+        code5 = findViewById(R.id.code5OUT);
+        code6 = findViewById(R.id.code6OUT);
+        code7 = findViewById(R.id.code7OUT);
+        code8 = findViewById(R.id.code8OUT);
 
         code1.requestFocus();
 
-        dateTextView = findViewById(R.id.dateTextView);
+        dateTextView = findViewById(R.id.dateTextViewOUT);
 
-        positive = findViewById(R.id.positivityCB);
-        caution = findViewById(R.id.cautionsCB);
+        positive = findViewById(R.id.positivityCBOUT);
+        caution = findViewById(R.id.cautionsCBOUT);
 
-        chooseDate = findViewById(R.id.chooseDate);
-        finalize = findViewById(R.id.finalize);
+        chooseDate = findViewById(R.id.chooseDateOUT);
+        finalize = findViewById(R.id.finalizeOUT);
 
         code1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -289,6 +289,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         dateTextView.setText(DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime()));
 
         finalize.setOnClickListener(e->{
+            getCode();
             if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
                 verifyCodeExists(fullCode);
             }
@@ -302,7 +303,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-        backbuttonCO = findViewById(R.id.backbutton);
+        backbuttonCO = findViewById(R.id.backbuttonOUT);
 
         backbuttonCO.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -360,7 +361,6 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         });
     }
     private boolean validateCode(String fullCode) {
-        getCode();
         if(fullCode.length() != 9)
             return false;
         return true;

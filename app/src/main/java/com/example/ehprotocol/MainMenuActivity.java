@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainMenuActivity extends AppCompatActivity implements PopUpMessage.LoggingOut {
     public static final String TAG = "FrontendDebug";
 
-    private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton;
+    private Button checkInButton, checkOutButton, statistics, aboutButton, logoutButton, tipsButton;
 
 
     @Override
@@ -24,6 +24,7 @@ public class MainMenuActivity extends AppCompatActivity implements PopUpMessage.
         statistics = findViewById(R.id.statisticsButton);
         aboutButton = findViewById(R.id.aboutButton);
         logoutButton = findViewById(R.id.logoutButton);
+        tipsButton = findViewById(R.id.tipsButton);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String isContact = preferences.getString("isContact", null);
@@ -50,6 +51,11 @@ public class MainMenuActivity extends AppCompatActivity implements PopUpMessage.
 
         aboutButton.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
+            startActivity(intent);
+        });
+
+        tipsButton.setOnClickListener(e -> {
+            Intent intent = new Intent(getApplicationContext(), TipsActivity.class);
             startActivity(intent);
         });
     }

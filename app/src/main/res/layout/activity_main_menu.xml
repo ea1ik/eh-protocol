@@ -8,11 +8,63 @@
     tools:context=".MainMenuActivity">
 
     <Button
+        android:id="@+id/tipsButton"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="#E3FFFFFF"
+        android:text="Tips Against The Virus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.358"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486" />
+
+    <Button
+        android:id="@+id/aboutButton"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="#E3FFFFFF"
+        android:text="About The App"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.358"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.611" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.611"
+        app:srcCompat="@drawable/faq" />
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486"
+        app:srcCompat="@drawable/virus" />
+
+    <Button
         android:id="@+id/checkOutButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="#FFFFFF"
-        android:text="Check-Out"
+        android:text="CONFIRM RECOVERY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.358"
@@ -33,24 +85,11 @@
         app:srcCompat="@drawable/ic_call_missed_outgoing_black_24dp" />
 
     <Button
-        android:id="@+id/aboutButton"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:background="#E3FFFFFF"
-        android:text="About"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.358"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.487" />
-
-    <Button
         android:id="@+id/checkInButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="#FFFFFF"
-        android:text="Check-In"
+        android:text="CONFIRM EXPOSURE TO THE VIRUS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.358"
@@ -63,25 +102,13 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="#FFFFFF"
-        android:text="Statistics"
+        android:text="DAILY STATISTICS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.358"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.361" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.737"
-        app:srcCompat="@drawable/logout" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -107,19 +134,6 @@
         app:layout_constraintVertical_bias="0.361"
         app:srcCompat="@drawable/stats" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.487"
-        app:srcCompat="@drawable/faq" />
-
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="150dp"
@@ -131,6 +145,18 @@
         app:layout_constraintHorizontal_bias="0.358"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.737" />
+        app:layout_constraintVertical_bias="0.814" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814"
+        app:srcCompat="@drawable/logout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,48 +7,11 @@
     android:background="@drawable/background"
     tools:context=".CheckOut">
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.549"
-        app:srcCompat="@drawable/calendar" />
-
-    <ImageButton
-        android:id="@+id/backbutton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#2FFFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925"
-        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
-
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.475" />
-
     <Button
-        android:id="@+id/chooseDate"
+        android:id="@+id/chooseDateOUT"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:background="#6CFFFFFF"
+        android:background="#83FFFFFF"
         android:text="Change Date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,44 +20,58 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.55" />
 
-    <EditText
-        android:id="@+id/code3"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code4"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <CheckBox
+        android:id="@+id/positivityCBOUT"
+        android:layout_width="320dp"
+        android:layout_height="75dp"
+        android:text="I hereby declare that the patient has tested negative 6 times before filling the information above and below."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.675" />
 
-    <EditText
-        android:id="@+id/code2"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <CheckBox
+        android:id="@+id/cautionsCBOUT"
+        android:layout_width="320dp"
+        android:layout_height="75dp"
+        android:text="I hereby declare that all the necessary instructions and precautions are given to the patient."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
-    <EditText
-        android:id="@+id/code4"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code5"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <TextView
+        android:id="@+id/dateTextViewOUT"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:textAlignment="textEnd"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias=".475" />
+
+    <ImageButton
+        android:id="@+id/backbuttonOUT"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#4EFFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
     <Button
-        android:id="@+id/finalize"
+        android:id="@+id/finalizeOUT"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="#2FFFFFFF"
@@ -106,79 +83,130 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.925" />
 
-    <CheckBox
-        android:id="@+id/positivityCB"
-        android:layout_width="320dp"
-        android:layout_height="75dp"
-        android:text="I hereby declare that the patient has tested negative 6 times before filling the information above and below."
+    <EditText
+        android:id="@+id/code1OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <EditText
+        android:id="@+id/code2OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <EditText
+        android:id="@+id/code3OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <EditText
+        android:id="@+id/code4OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".675" />
+        app:layout_constraintVertical_bias="0.375" />
 
-    <CheckBox
-        android:id="@+id/cautionsCB"
-        android:layout_width="320dp"
-        android:layout_height="75dp"
-        android:text="I hereby declare that all the necessary instructions and precautions are given to the patient."
+    <EditText
+        android:id="@+id/code5OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".8" />
+        app:layout_constraintVertical_bias="0.375" />
 
     <EditText
-        android:id="@+id/code5"
+        android:id="@+id/code6OUT"
         android:layout_width="28dp"
         android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code6"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <EditText
-        android:id="@+id/code6"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code7"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <EditText
-        android:id="@+id/code1"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code2"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
 
     <EditText
-        android:id="@+id/code7"
+        android:id="@+id/code7OUT"
         android:layout_width="28dp"
         android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="1"
-        app:layout_constraintEnd_toStartOf="@+id/code8"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <EditText
+        android:id="@+id/code8OUT"
+        android:layout_width="28dp"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:maxLength="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.375" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.549"
+        app:srcCompat="@drawable/calendar" />
 
     <TextView
         android:id="@+id/textView6"
@@ -192,18 +220,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias=".1" />
-
-    <EditText
-        android:id="@+id/code8"
-        android:layout_width="28dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="84dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"

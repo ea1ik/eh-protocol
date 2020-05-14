@@ -59,7 +59,8 @@ public class NotificationsSender extends Application {
         Notification notification = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(R.drawable.notif)
                 .setContentTitle(title)
-                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message))
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build();
 

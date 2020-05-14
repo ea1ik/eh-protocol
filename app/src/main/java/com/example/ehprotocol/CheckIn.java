@@ -31,7 +31,6 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteDeleteResult;
 import com.mongodb.stitch.core.services.mongodb.remote.RemoteUpdateResult;
 
-import org.bson.BsonDateTime;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -63,24 +62,24 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         codesCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("MedicalCodes");
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
-        code1 = findViewById(R.id.code1);
-        code2 = findViewById(R.id.code2);
-        code3 = findViewById(R.id.code3);
-        code4 = findViewById(R.id.code4);
-        code5 = findViewById(R.id.code5);
-        code6 = findViewById(R.id.code6);
-        code7 = findViewById(R.id.code7);
-        code8 = findViewById(R.id.code8);
+        code1 = findViewById(R.id.code1IN);
+        code2 = findViewById(R.id.code2IN);
+        code3 = findViewById(R.id.code3IN);
+        code4 = findViewById(R.id.code4IN);
+        code5 = findViewById(R.id.code5IN);
+        code6 = findViewById(R.id.code6IN);
+        code7 = findViewById(R.id.code7IN);
+        code8 = findViewById(R.id.code8IN);
 
         code1.requestFocus();
 
-        dateTextView = findViewById(R.id.dateTextView);
+        dateTextView = findViewById(R.id.dateTextViewIN);
 
-        positive = findViewById(R.id.positivityCB);
-        caution = findViewById(R.id.cautionsCB);
+        positive = findViewById(R.id.positivityCBIN);
+        caution = findViewById(R.id.cautionsCBIN);
 
-        chooseDate = findViewById(R.id.chooseDate);
-        finalize = findViewById(R.id.finalize);
+        chooseDate = findViewById(R.id.chooseDateIN);
+        finalize = findViewById(R.id.finalizeIN);
 
         code1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -151,7 +150,6 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if (keyCode == event.KEYCODE_DEL && code3.getText().toString().isEmpty()) {
-                            Log.d(TAG, "Here3");
                             code2.requestFocus();
                         } else if (keyCode != event.KEYCODE_DEL && !code3.getText().toString().isEmpty())
                             code4.requestFocus();
@@ -308,7 +306,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
-        backbuttonCI = findViewById(R.id.backbutton);
+        backbuttonCI = findViewById(R.id.backbuttonIN);
 
         backbuttonCI.setOnClickListener(e->{
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -400,6 +398,10 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                 }
                             }
                         });
+                        clearAllFields();
+                        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                        startActivity(intent);
+
                     }
                 } else {
                     Log.e("app", "Failed to findOne: ", task.getException());
