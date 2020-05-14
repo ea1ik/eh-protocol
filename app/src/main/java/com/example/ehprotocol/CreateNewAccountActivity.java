@@ -105,7 +105,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backbuttonCreateAccount);
 
         backButton.setOnClickListener(e->{
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         });
 

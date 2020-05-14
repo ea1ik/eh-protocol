@@ -353,6 +353,9 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
                                 }
                             }
                         });
+                        clearAllFields();
+                        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                        startActivity(intent);
                     }
                 } else {
                     Log.e("app", "Failed to findOne: ", task.getException());

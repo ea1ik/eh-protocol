@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,14 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout usernameText, passwordText;
     private TextView newUser, forgotPass, errorText;
     private Button loginButton;
-    private CheckBox rememberMeCB;
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection usersCollection;
-
-    private static boolean rememberMe;
-
-    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +72,6 @@ public class LoginActivity extends AppCompatActivity {
 
         newUser.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), CreateNewAccountActivity.class);
-            startActivity(intent);
-        });
-
-        backButton = findViewById(R.id.backbuttonLogin);
-
-        backButton.setOnClickListener(e->{
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         });
     }

@@ -7,19 +7,6 @@
     android:background="@drawable/background"
     tools:context=".LoginActivity">
 
-    <ImageButton
-        android:id="@+id/backbuttonLogin"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#61FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.923"
-        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
-
     <Button
         android:id="@+id/loginButton"
         android:layout_width="150dp"
