@@ -102,9 +102,8 @@ public class LocationProvider extends JobService {
                             double lat=location.getLatitude();
                             double lon=location.getLongitude();
                             //find my acc & get my list
-                            user = preferences.getString("username", null);
                             RemoteFindIterable myAcc = usersCollection
-                                    .find(new Document().append("username",user));
+                                    .find(filterDoc);
 
                            Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
                             itemTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
@@ -147,7 +146,7 @@ public class LocationProvider extends JobService {
                                                                 new Document().append("contacts", contacts)
                                                         );
                                                         final Task<RemoteUpdateResult> updateTask2 =
-                                                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), update2);
+                                                                usersCollection.updateOne(filterDoc, update2);
                                                         updateTask.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<RemoteUpdateResult> task) {
@@ -201,13 +200,15 @@ public class LocationProvider extends JobService {
             return false;
         for (Document a : contact_people){
             if (a.get("_id").equals(contacts.get("id"))){
+                Log.d("a", "inside if statement");
                 Calendar c = Calendar.getInstance();
                 Date d =new Date(System.currentTimeMillis());
                 c.setTime(d);
                 c.add(Calendar.DATE, -1);
                 d.setTime( c.getTime().getTime() );
                 long millisec = d.getTime();
-                if(a.getDate("date").before(new Date(millisec)))
+                long contactTime=a.getDate("date").getTime();
+                if(contactTime < millisec)
                     return false;
                 else
                     return true;}}
