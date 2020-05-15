@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,14 +58,13 @@ public class MainActivity extends AppCompatActivity {
         enterButton.setOnClickListener(e -> {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             String userid = preferences.getString("ID", null);
-            if (userid != null){
-                Log.d("hi", "in");
+            if (userid != null) {
                 Intent startIntent = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(startIntent);
+            } else {
+                Intent startIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(startIntent);
             }
-            else{
-            Intent startIntent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(startIntent);}
         });
     }
 

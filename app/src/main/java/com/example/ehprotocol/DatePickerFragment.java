@@ -14,7 +14,7 @@ public class DatePickerFragment extends DialogFragment {
 
     public boolean today, bounded;
 
-    public DatePickerFragment(boolean today, boolean bounded){
+    public DatePickerFragment(boolean today, boolean bounded) {
         this.today = today;
         this.bounded = bounded;
     }
@@ -23,7 +23,7 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Calendar c = Calendar.getInstance();
-        if(!today)
+        if (!today)
             c.add(Calendar.DATE, -1);
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -34,7 +34,7 @@ public class DatePickerFragment extends DialogFragment {
         firstDay.set(Calendar.MONTH, 0);
         firstDay.set(Calendar.DAY_OF_MONTH, 22);
 
-        DatePickerDialog datePicker =  new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        DatePickerDialog datePicker = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
         if (bounded) {
             datePicker.getDatePicker().setMaxDate(c.getTimeInMillis());
             datePicker.getDatePicker().setMinDate(firstDay.getTimeInMillis());

@@ -23,11 +23,6 @@ import org.bson.Document;
 
 import java.util.Arrays;
 
-// Base Stitch Packages
-// Stitch Authentication Packages
-// MongoDB Service Packages
-// Utility Packages
-
 public class CreateNewAccountActivity extends AppCompatActivity {
     final String Debugg = "stuff";
     private TextInputLayout usernameInput, passwordInput, confirmPasswordInput;
@@ -104,7 +99,7 @@ public class CreateNewAccountActivity extends AppCompatActivity {
 
         backButton = findViewById(R.id.backbuttonCreateAccount);
 
-        backButton.setOnClickListener(e->{
+        backButton.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         });

@@ -291,44 +291,44 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
         Calendar c = Calendar.getInstance();
         dateTextView.setText(DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime()));
 
-        finalize.setOnClickListener(e->{
+        finalize.setOnClickListener(e -> {
             getCode();
-            if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
+            if (validateCode(fullCode) && positive.isChecked() && caution.isChecked()) {
                 verifyCodeExists(fullCode);
-            }
-            else{
+            } else {
                 Toast.makeText(getApplicationContext(), "You have missing information or the code is invalid", Toast.LENGTH_SHORT).show();
             }
         });
 
-        chooseDate.setOnClickListener(e->{
+        chooseDate.setOnClickListener(e -> {
             DialogFragment datePicker = new DatePickerFragment(true, true);
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
         backbuttonCI = findViewById(R.id.backbuttonIN);
 
-        backbuttonCI.setOnClickListener(e->{
+        backbuttonCI.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
             startActivity(intent);
         });
     }
-    private void verifyCodeExists(String code){
+
+    private void verifyCodeExists(String code) {
         Document filterDoc = new Document().append("key", code);
 
-        final Task <Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
-        findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener <Document> () {
+        final Task<Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
+        findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener<Document>() {
             @Override
-            public void onComplete(@NonNull Task <Document> task) {
+            public void onComplete(@NonNull Task<Document> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult() == null) {
                         Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
                         final Task<RemoteDeleteResult> deleteTask = codesCollection.deleteOne(filterDoc);
-                        deleteTask.addOnCompleteListener(new OnCompleteListener <RemoteDeleteResult> () {
+                        deleteTask.addOnCompleteListener(new OnCompleteListener<RemoteDeleteResult>() {
                             @Override
-                            public void onComplete(@NonNull Task <RemoteDeleteResult> task) {
+                            public void onComplete(@NonNull Task<RemoteDeleteResult> task) {
                                 if (task.isSuccessful()) {
                                     long numDeleted = task.getResult().getDeletedCount();
                                     Log.d("app", String.format("successfully deleted %d documents", numDeleted));
@@ -341,7 +341,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                 new Document().append("isSick", true));
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         final Task<RemoteUpdateResult> updateTask2 =
-                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), updateStatus);
+                                usersCollection.updateOne(new Document().append("username", preferences.getString("username", null)), updateStatus);
                         updateTask2.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
                             @Override
                             public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
@@ -356,7 +356,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                             }
                         });
                         RemoteFindIterable myAcc = usersCollection
-                                .find(new Document().append("username",preferences.getString("username", null)));
+                                .find(new Document().append("username", preferences.getString("username", null)));
                         Task<List<Document>> itemTask = myAcc.into(new ArrayList<Document>());
                         itemTask.addOnCompleteListener(new OnCompleteListener<List<Document>>() {
                             @Override
@@ -365,7 +365,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                     Log.d("h", "hello");
                                     List<Document> items = task.getResult();
                                     ArrayList<Document> list = (ArrayList<Document>) items.get(0).get("contacts");
-                                    for (Document a: list){
+                                    for (Document a : list) {
                                         Document updateContactStatus = new Document().append("$set",
                                                 new Document().append("isContact", true));
                                         final Task<RemoteUpdateResult> updateTaskContacts =
@@ -384,7 +384,9 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
                                             }
                                         });
                                     }
-                                }}});
+                                }
+                            }
+                        });
                         Document filterDoc = new Document().append("username", preferences.getString("username", null));
                         Document updateStatusAgain = new Document().append("$set",
                                 new Document().append("isContact", false));
@@ -412,7 +414,7 @@ public class CheckIn extends AppCompatActivity implements DatePickerDialog.OnDat
 
 
     private boolean validateCode(String fullCode) {
-        if(fullCode.length() != 9)
+        if (fullCode.length() != 9)
             return false;
         return true;
     }

@@ -4,7 +4,6 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,9 +28,9 @@ public class CoronaAlerter extends JobService {
     private StitchAppClient stitchClient;
     private RemoteMongoClient mongoClient;
     private RemoteMongoCollection usersCollection;
+
     @Override
     public boolean onStartJob(JobParameters params) {
-        Log.d(TAG, "Task started");
         stitchClient = Stitch.getDefaultAppClient();
         mongoClient = stitchClient.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         usersCollection = mongoClient.getDatabase("COVID19ContactTracing").getCollection("Users");
@@ -43,10 +42,9 @@ public class CoronaAlerter extends JobService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(count < 15 * (60 / refreshRate)) {
+                while (count < 15 * (60 / refreshRate)) {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     user = preferences.getString("username", null);
-                    Log.d(TAG, "Job # " + count + " started");
                     if (user != null) {
                         Document filterDoc = new Document().append("username", user);
                         RemoteFindIterable findResults = usersCollection
@@ -58,7 +56,7 @@ public class CoronaAlerter extends JobService {
                                 if (task.isSuccessful()) {
                                     List<Document> items = task.getResult();
                                     boolean isContacted = items.get(0).getBoolean("isContact");
-                                    if(isContacted){
+                                    if (isContacted) {
                                         String title = "COVID-19 ALERT";
                                         String message = "Our data has detected that you've recently been in contact with someone who tested positive to the COVID-19 virus."
                                                 + " You should immediately head to the nearest testing center to get tested, and follow the right procedures.";
@@ -79,22 +77,22 @@ public class CoronaAlerter extends JobService {
                                     }
 
 
-                                }}});
-                   // boolean isContacted = getStatus();
+                                }
+                            }
+                        });
+                        // boolean isContacted = getStatus();
                     }
 
                     try {
-                        Thread.sleep(refreshRate*1000);
+                        Thread.sleep(refreshRate * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    Log.d(TAG, "Job # " + count + " finished");
                     count++;
                 }
                 count = 0;
                 jobFinished(params, false);
-                Log.d(TAG, "Task finished");
             }
         }).start();
     }
@@ -110,13 +108,12 @@ public class CoronaAlerter extends JobService {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("isContact","true");
+        editor.putString("isContact", "true");
         editor.apply();
     }
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        Log.d(TAG, "Task interrupted");
         jobCancelled = true;
         return true;
     }

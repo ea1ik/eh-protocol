@@ -58,11 +58,11 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = findViewById(R.id.loginButton);
 
-        loginButton.setOnClickListener(new View.OnClickListener(){
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    signIn(usernameText.getEditText().getText().toString().trim(),passwordText.getEditText().getText().toString());
+                    signIn(usernameText.getEditText().getText().toString().trim(), passwordText.getEditText().getText().toString());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -89,25 +89,23 @@ public class LoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     List<Document> items = task.getResult();
                     Log.d("app", String.format("successfully found %d documents", items.size()));
-                    if (items.size()==0){
+                    if (items.size() == 0) {
                         usernameText.setError("Invalid username or password.");
-                    }
-                    else{
+                    } else {
                         Log.d("app", items.get(0).get("password").toString());
-                        if(password.equals(items.get(0).get("password").toString())){
+                        if (password.equals(items.get(0).get("password").toString())) {
                             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                             startActivity(intent);
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("ID",items.get(0).get("_id").toString());
-                            editor.putString("username",items.get(0).get("username").toString());
+                            editor.putString("ID", items.get(0).get("_id").toString());
+                            editor.putString("username", items.get(0).get("username").toString());
                             editor.apply();
-                        }
-                        else{
+                        } else {
                             usernameText.setError("Invalid username or password.");
                         }
                     }
-                    for (Document item: items) {
+                    for (Document item : items) {
                         Log.d("app", String.format("successfully found:  %s", item.toString()));
                     }
                 } else {
@@ -119,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validateUsername() {
-        if(usernameText.getEditText().getText().toString().isEmpty()){
+        if (usernameText.getEditText().getText().toString().isEmpty()) {
             usernameText.setError("Field is empty");
             return false;
         }
@@ -128,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validatePassword() {
-        if(passwordText.getEditText().getText().toString().isEmpty()){
+        if (passwordText.getEditText().getText().toString().isEmpty()) {
             passwordText.setError("Field is empty");
             return false;
         }

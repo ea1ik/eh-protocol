@@ -146,7 +146,6 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
                         if (keyCode == event.KEYCODE_DEL && code3.getText().toString().isEmpty()) {
-                            Log.d(TAG, "Here3");
                             code2.requestFocus();
                         } else if (keyCode != event.KEYCODE_DEL && !code3.getText().toString().isEmpty())
                             code4.requestFocus();
@@ -288,45 +287,45 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
         Calendar c = Calendar.getInstance();
         dateTextView.setText(DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime()));
 
-        finalize.setOnClickListener(e->{
+        finalize.setOnClickListener(e -> {
             getCode();
-            if(validateCode(fullCode) && positive.isChecked() && caution.isChecked()){
+            if (validateCode(fullCode) && positive.isChecked() && caution.isChecked()) {
                 verifyCodeExists(fullCode);
-            }
-            else{
+            } else {
                 Toast.makeText(getApplicationContext(), "You have missing information or the code is invalid", Toast.LENGTH_SHORT).show();
             }
         });
 
-        chooseDate.setOnClickListener(e->{
+        chooseDate.setOnClickListener(e -> {
             DialogFragment datePicker = new DatePickerFragment(true, true);
             datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
         backbuttonCO = findViewById(R.id.backbuttonOUT);
 
-        backbuttonCO.setOnClickListener(e->{
+        backbuttonCO.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
             startActivity(intent);
         });
 
     }
-    private void verifyCodeExists(String code){
+
+    private void verifyCodeExists(String code) {
         Document filterDoc = new Document().append("key", code);
 
         final Task<Document> findOneAndUpdateTask = codesCollection.findOne(filterDoc);
         findOneAndUpdateTask.addOnCompleteListener(new OnCompleteListener<Document>() {
             @Override
-            public void onComplete(@NonNull Task <Document> task) {
+            public void onComplete(@NonNull Task<Document> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult() == null) {
                         Toast.makeText(getApplicationContext(), "Invalid Code", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Code is valid!", Toast.LENGTH_SHORT).show();
                         final Task<RemoteDeleteResult> deleteTask = codesCollection.deleteOne(filterDoc);
-                        deleteTask.addOnCompleteListener(new OnCompleteListener <RemoteDeleteResult> () {
+                        deleteTask.addOnCompleteListener(new OnCompleteListener<RemoteDeleteResult>() {
                             @Override
-                            public void onComplete(@NonNull Task <RemoteDeleteResult> task) {
+                            public void onComplete(@NonNull Task<RemoteDeleteResult> task) {
                                 if (task.isSuccessful()) {
                                     long numDeleted = task.getResult().getDeletedCount();
                                     Log.d("app", String.format("successfully deleted %d documents", numDeleted));
@@ -339,7 +338,7 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
                                 new Document().append("isSick", false));
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         final Task<RemoteUpdateResult> updateTask2 =
-                                usersCollection.updateOne(new Document().append("username",preferences.getString("username", null)), updateStatus);
+                                usersCollection.updateOne(new Document().append("username", preferences.getString("username", null)), updateStatus);
                         updateTask2.addOnCompleteListener(new OnCompleteListener<RemoteUpdateResult>() {
                             @Override
                             public void onComplete(@androidx.annotation.NonNull Task<RemoteUpdateResult> task) {
@@ -363,8 +362,9 @@ public class CheckOut extends AppCompatActivity implements DatePickerDialog.OnDa
             }
         });
     }
+
     private boolean validateCode(String fullCode) {
-        if(fullCode.length() != 9)
+        if (fullCode.length() != 9)
             return false;
         return true;
     }
