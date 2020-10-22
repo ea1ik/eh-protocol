@@ -7,7 +7,7 @@ Contact Tracing Android application developed in March-May 2020. The goal is to 
 ## Contributors
 This application was developed by Hala Saadeh and Elias Azar. 
 ### Contact Info
-<halagsaadeh@gmail.com>
+<halagsaadeh@gmail.com> 
  <ea1ik.pro@gmail.com>
 
 ## How does it work?
